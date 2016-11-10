@@ -17,13 +17,17 @@ public class Emergencias extends AppWidgetProvider {
                                 int appWidgetId) {
 
         Intent callIntent = new Intent(Intent.ACTION_DIAL);
-        callIntent.setData(Uri.parse("tel:" + "48321665"));
+        callIntent.setData(Uri.parse("tel:" + "08001227737"));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, callIntent, 0);
+
+        Intent callIntent2 = new Intent(Intent.ACTION_DIAL);
+        callIntent.setData(Uri.parse("tel:" + "42571111"));
+        PendingIntent pendingIntent2 = PendingIntent.getActivity(context, 0, callIntent, 0);
 
         // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.emergencias);
         views.setOnClickPendingIntent(R.id.actionButton, pendingIntent);
-        views.setOnClickPendingIntent(R.id.actionButton2, pendingIntent);
+        views.setOnClickPendingIntent(R.id.actionButton2, pendingIntent2);
 
         // Tell the AppWidgetManager to perform an update on the current App Widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
