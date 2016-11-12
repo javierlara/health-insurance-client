@@ -1,4 +1,4 @@
-package com.apres.apresmovil;
+package com.apres.apresmovil.views.widgets;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
+
+import com.apres.apresmovil.R;
 
 /**
  * Implementation of App Widget functionality.

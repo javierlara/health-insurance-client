@@ -1,4 +1,4 @@
-package com.apres.apresmovil;
+package com.apres.apresmovil.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.apres.apresmovil.HealthCenterItemFragment.OnListFragmentInteractionListener;
+import com.apres.apresmovil.R;
+import com.apres.apresmovil.fragments.HealthCenterItemFragment.OnListFragmentInteractionListener;
 import com.apres.apresmovil.dummy.DummyContent.DummyItem;
 
 import java.util.List;

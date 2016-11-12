@@ -1,19 +1,23 @@
-package com.apres.apresmovil;
+package com.apres.apresmovil.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.apres.apresmovil.R;
 import com.apres.apresmovil.dummy.DummyContent;
 import com.apres.apresmovil.dummy.DummyContent.DummyItem;
+import com.apres.apresmovil.network.ApiHelper;
+import com.apres.apresmovil.views.adapters.MyHealthCenterItemRecyclerViewAdapter;
 
-import java.util.List;
+import org.json.JSONArray;
 
 /**
  * A fragment representing a list of Items.
@@ -26,8 +30,9 @@ public class HealthCenterItemFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private ApiHelper mApiHelper;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,6 +57,7 @@ public class HealthCenterItemFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mApiHelper = new ApiHelper();
         }
     }
 
@@ -59,6 +65,18 @@ public class HealthCenterItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_healthcenteritem_list, container, false);
+
+        mApiHelper.getHealthCenters(new ApiHelper.ApiHelperCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                Log.i("HEALTHCENTERS", response.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("HEALTHCENTERSERROR",e.getMessage());
+            }
+        });
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -73,7 +91,6 @@ public class HealthCenterItemFragment extends Fragment {
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -103,7 +120,6 @@ public class HealthCenterItemFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
 }
