@@ -5,8 +5,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
+import com.apres.apresmovil.models.HealthCenter;
 
 import org.json.JSONArray;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by javierlara on 11/12/16.
@@ -16,7 +20,8 @@ public class ApiHelper {
     HealthInsuranceApplication helper = HealthInsuranceApplication.getInstance();
 
     public interface ApiHelperCallback {
-        void onSuccess(JSONArray response);
+        void onSuccess(List list);
+
         void onError(Exception error);
     }
 
@@ -41,7 +46,7 @@ public class ApiHelper {
 //                            atmo = response.getString("atmo_opacity");
 
 
-                            callback.onSuccess(response);
+//                            callback.onSuccess(response);
 
                         } catch (Exception e) {
                             callback.onError(e);
@@ -64,7 +69,29 @@ public class ApiHelper {
      * TODO: MOVE THIS TO ANOTHER CLASS
      */
     final static String HEALTH_CENTERS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/health_centers";
+
     public void getHealthCenters(final ApiHelperCallback callback) {
-        getRequest(HEALTH_CENTERS_ENDPOINT, callback);
+//        getRequest(HEALTH_CENTERS_ENDPOINT, callback);
+
+        GsonRequest<HealthCenter[]> request =
+                new GsonRequest<HealthCenter[]>(HEALTH_CENTERS_ENDPOINT, HealthCenter[].class,
+                        new Response.Listener<HealthCenter[]>() {
+                            @Override
+                            public void onResponse(HealthCenter[] response) {
+                                List<HealthCenter> healthCenters = Arrays.asList(response);
+                                callback.onSuccess(healthCenters);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
     }
 }

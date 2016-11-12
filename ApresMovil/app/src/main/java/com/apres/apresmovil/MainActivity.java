@@ -12,8 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.apres.apresmovil.dummy.DummyContent;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
+import com.apres.apresmovil.models.HealthCenter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HealthCenterItemFragment.OnListFragmentInteractionListener {
@@ -81,9 +81,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = new HealthCenterItemFragment();
         if (id == R.id.nav_health_centers) {
-            fragment = new HealthCenterItemFragment();
+            Fragment fragment = new HealthCenterItemFragment();
+//            Bundle args = new Bundle();
+//            args.putInt("asd", 2);
+//            fragment.setArguments(args);
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
 //        } else if (id == R.id.nav_gallery) {
 //
 //        } else if (id == R.id.nav_slideshow) {
@@ -96,18 +103,12 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(HealthCenter item) {
 
     }
 }

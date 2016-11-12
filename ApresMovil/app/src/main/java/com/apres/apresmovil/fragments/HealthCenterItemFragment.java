@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.dummy.DummyContent;
-import com.apres.apresmovil.dummy.DummyContent.DummyItem;
+import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.network.ApiHelper;
 import com.apres.apresmovil.views.adapters.MyHealthCenterItemRecyclerViewAdapter;
 
-import org.json.JSONArray;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -32,7 +32,9 @@ public class HealthCenterItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private ApiHelper mApiHelper;
+    private ApiHelper mApiHelper = new ApiHelper();
+    private List<HealthCenter> mHealthCenterList;
+    private MyHealthCenterItemRecyclerViewAdapter mHealthCenterAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,7 +59,6 @@ public class HealthCenterItemFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mApiHelper = new ApiHelper();
         }
     }
 
@@ -66,15 +67,21 @@ public class HealthCenterItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_healthcenteritem_list, container, false);
 
+        mHealthCenterList = new ArrayList<>();
+        mHealthCenterAdapter = new MyHealthCenterItemRecyclerViewAdapter(mHealthCenterList, mListener);
+
         mApiHelper.getHealthCenters(new ApiHelper.ApiHelperCallback() {
             @Override
-            public void onSuccess(JSONArray response) {
-                Log.i("HEALTHCENTERS", response.toString());
+            public void onSuccess(List list) {
+                mHealthCenterList.clear();
+                mHealthCenterList.addAll(list);
+                mHealthCenterAdapter.notifyDataSetChanged();
+                Log.i("HEALTHCENTERS", mHealthCenterList.toString());
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e("HEALTHCENTERSERROR",e.getMessage());
+                Log.e("HEALTHCENTERSERROR", e.getMessage());
             }
         });
 
@@ -87,7 +94,7 @@ public class HealthCenterItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyHealthCenterItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(mHealthCenterAdapter);
         }
         return view;
     }
@@ -120,6 +127,6 @@ public class HealthCenterItemFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(HealthCenter item);
     }
 }
