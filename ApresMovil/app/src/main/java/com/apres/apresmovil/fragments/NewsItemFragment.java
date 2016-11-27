@@ -72,7 +72,7 @@ public class NewsItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_healthcenteritem_list, container, false);
 
         mNewsList = new ArrayList<>();
-        mNewsAdapter = new MyNewsItemRecyclerViewAdapter(mNewsList, mListener);
+        mNewsAdapter = new MyNewsItemRecyclerViewAdapter(mNewsList, mListener, getContext());
 
         mApiHelper.getNewses(new ApiHelper.ApiHelperCallback() {
             @Override

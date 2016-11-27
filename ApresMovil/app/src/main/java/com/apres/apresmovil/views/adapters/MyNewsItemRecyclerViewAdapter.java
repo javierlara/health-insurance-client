@@ -1,5 +1,6 @@
 package com.apres.apresmovil.views.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,19 +11,22 @@ import android.widget.TextView;
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.NewsItemFragment;
 import com.apres.apresmovil.models.News;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
  * Created by javierlara on 11/26/16.
  */
-public class MyNewsItemRecyclerViewAdapter  extends RecyclerView.Adapter<MyNewsItemRecyclerViewAdapter.ViewHolder> {
+public class MyNewsItemRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsItemRecyclerViewAdapter.ViewHolder> {
     private final List<News> mValues;
     private final NewsItemFragment.OnListFragmentInteractionListener mListener;
+    protected Context mContext;
 
-    public MyNewsItemRecyclerViewAdapter(List<News> items, NewsItemFragment.OnListFragmentInteractionListener listener) {
+    public MyNewsItemRecyclerViewAdapter(List<News> items, NewsItemFragment.OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -36,7 +40,8 @@ public class MyNewsItemRecyclerViewAdapter  extends RecyclerView.Adapter<MyNewsI
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
-        holder.mImageView.setText(mValues.get(position).image);
+        Picasso.with(mContext).load(mValues.get(position).image).into(holder.mImageView);
+//        holder.mImageView.setText(mValues.get(position).image);
         holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
