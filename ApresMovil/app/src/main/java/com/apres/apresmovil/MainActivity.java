@@ -13,10 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
+import com.apres.apresmovil.fragments.NewsItemFragment;
 import com.apres.apresmovil.models.HealthCenter;
+import com.apres.apresmovil.models.News;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HealthCenterItemFragment.OnListFragmentInteractionListener {
+        implements
+            NavigationView.OnNavigationItemSelectedListener,
+            HealthCenterItemFragment.OnListFragmentInteractionListener,
+            NewsItemFragment.OnListFragmentInteractionListener
+{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,24 +89,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_health_centers) {
             Fragment fragment = new HealthCenterItemFragment();
-//            Bundle args = new Bundle();
-//            args.putInt("asd", 2);
-//            fragment.setArguments(args);
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_news) {
+            Fragment fragment = new NewsItemFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -109,6 +108,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onListFragmentInteraction(HealthCenter item) {
+
+    }
+
+    public void onListFragmentInteraction(News item) {
 
     }
 }

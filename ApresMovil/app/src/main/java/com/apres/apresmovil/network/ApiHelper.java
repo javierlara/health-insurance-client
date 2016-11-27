@@ -6,6 +6,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.models.HealthCenter;
+import com.apres.apresmovil.models.News;
 
 import org.json.JSONArray;
 
@@ -69,6 +70,7 @@ public class ApiHelper {
      * TODO: MOVE THIS TO ANOTHER CLASS
      */
     final static String HEALTH_CENTERS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/health_centers";
+    final static String NEWS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/news";
 
     public void getHealthCenters(final ApiHelperCallback callback) {
 //        getRequest(HEALTH_CENTERS_ENDPOINT, callback);
@@ -80,6 +82,29 @@ public class ApiHelper {
                             public void onResponse(HealthCenter[] response) {
                                 List<HealthCenter> healthCenters = Arrays.asList(response);
                                 callback.onSuccess(healthCenters);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getNewses(final ApiHelperCallback callback) {
+        GsonRequest<News[]> request =
+                new GsonRequest<News[]>(NEWS_ENDPOINT, News[].class,
+                        new Response.Listener<News[]>() {
+                            @Override
+                            public void onResponse(News[] response) {
+                                List<News> news = Arrays.asList(response);
+                                callback.onSuccess(news);
                             }
 
                         },

@@ -25,6 +25,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="nav_health_centers">Centros Médicos</string>
+    <string name="nav_news">Novedades</string>
     <string name="addressLabel">Dirección</string>
     <string name="telephoneLabel">Teléfono</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
