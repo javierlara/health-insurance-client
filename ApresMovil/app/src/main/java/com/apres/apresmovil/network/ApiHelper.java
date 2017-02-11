@@ -5,8 +5,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
+import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
+import com.apres.apresmovil.models.Plan;
+import com.apres.apresmovil.models.Speciality;
 
 import org.json.JSONArray;
 
@@ -71,6 +74,10 @@ public class ApiHelper {
      */
     final static String HEALTH_CENTERS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/health_centers";
     final static String NEWS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/news";
+    final static String PLANS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/plans";
+    final static String DOCTORS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/doctors";
+    final static String SPECIALITIES_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/specialities";
+    final static String CARTILLA_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/cartilla";
 
     public void getHealthCenters(final ApiHelperCallback callback) {
 //        getRequest(HEALTH_CENTERS_ENDPOINT, callback);
@@ -105,6 +112,108 @@ public class ApiHelper {
                             public void onResponse(News[] response) {
                                 List<News> news = Arrays.asList(response);
                                 callback.onSuccess(news);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getPlans(final ApiHelperCallback callback) {
+        GsonRequest<Plan[]> request =
+                new GsonRequest<Plan[]>(PLANS_ENDPOINT, Plan[].class,
+                        new Response.Listener<Plan[]>() {
+                            @Override
+                            public void onResponse(Plan[] response) {
+                                List<Plan> plans = Arrays.asList(response);
+                                callback.onSuccess(plans);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getDoctors(final ApiHelperCallback callback) {
+        GsonRequest<Doctor[]> request =
+                new GsonRequest<Doctor[]>(DOCTORS_ENDPOINT, Doctor[].class,
+                        new Response.Listener<Doctor[]>() {
+                            @Override
+                            public void onResponse(Doctor[] response) {
+                                List<Doctor> doctors = Arrays.asList(response);
+                                callback.onSuccess(doctors);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getCartilla(String plan_id, String speciality_id, String location, final ApiHelperCallback callback) {
+        String endpoint = CARTILLA_ENDPOINT + "?";
+        if(plan_id != "") {
+            endpoint = endpoint + "plan_id=" + plan_id + "&";
+        }
+        if(speciality_id != "") {
+            endpoint = endpoint + "speciality_id=" + speciality_id + "&";
+        }
+        if(location != "") {
+            endpoint = endpoint + "location=" + location + "&";
+        }
+        GsonRequest<Doctor[]> request =
+                new GsonRequest<Doctor[]>(endpoint, Doctor[].class,
+                        new Response.Listener<Doctor[]>() {
+                            @Override
+                            public void onResponse(Doctor[] response) {
+                                List<Doctor> doctors = Arrays.asList(response);
+                                callback.onSuccess(doctors);
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getSpecialitites(final ApiHelperCallback callback) {
+        GsonRequest<Speciality[]> request =
+                new GsonRequest<Speciality[]>(SPECIALITIES_ENDPOINT, Speciality[].class,
+                        new Response.Listener<Speciality[]>() {
+                            @Override
+                            public void onResponse(Speciality[] response) {
+                                List<Speciality> specialities = Arrays.asList(response);
+                                callback.onSuccess(specialities);
                             }
 
                         },

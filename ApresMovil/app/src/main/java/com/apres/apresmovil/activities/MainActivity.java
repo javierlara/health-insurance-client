@@ -1,7 +1,9 @@
-package com.apres.apresmovil;
+package com.apres.apresmovil.activities;
 
 import android.app.FragmentManager;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.apres.apresmovil.R;
+import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
 import com.apres.apresmovil.fragments.NewsItemFragment;
 import com.apres.apresmovil.models.HealthCenter;
@@ -21,7 +25,8 @@ public class MainActivity extends AppCompatActivity
         implements
             NavigationView.OnNavigationItemSelectedListener,
             HealthCenterItemFragment.OnListFragmentInteractionListener,
-            NewsItemFragment.OnListFragmentInteractionListener
+            NewsItemFragment.OnListFragmentInteractionListener,
+            CartillaFragment.OnFragmentInteractionListener
 {
 
     @Override
@@ -78,6 +83,21 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
+        } else if (id == R.id.nav_cartilla) {
+            Fragment fragment = new CartillaFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+//        } else if (id == R.id.nav_map) {
+//            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+//            startActivity(intent);
+//        } else if (id == R.id.nav_map) {
+//            Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+//            startActivity(intent);
+        } else if (id == R.id.nav_current_location) {
+            Intent intent = new Intent(MainActivity.this, CurrentLocation2Activity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,4 +112,9 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(News item) {
 
     }
+
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 }
