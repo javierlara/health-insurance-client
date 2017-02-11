@@ -1,5 +1,7 @@
 package com.apres.apresmovil.network;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -173,7 +175,7 @@ public class ApiHelper {
 
     }
 
-    public void getCartilla(String plan_id, String speciality_id, String location, final ApiHelperCallback callback) {
+    public void getCartilla(String plan_id, String speciality_id, String latitude, String longitude, final ApiHelperCallback callback) {
         String endpoint = CARTILLA_ENDPOINT + "?";
         if(plan_id != "") {
             endpoint = endpoint + "plan_id=" + plan_id + "&";
@@ -181,9 +183,14 @@ public class ApiHelper {
         if(speciality_id != "") {
             endpoint = endpoint + "speciality_id=" + speciality_id + "&";
         }
-        if(location != "") {
-            endpoint = endpoint + "location=" + location + "&";
+        if(latitude != "") {
+            endpoint = endpoint + "lat=" + latitude + "&";
         }
+        if(longitude != "") {
+            endpoint = endpoint + "long=" + longitude + "&";
+        }
+
+        Log.i("API_CARTILLA", endpoint);
         GsonRequest<Doctor[]> request =
                 new GsonRequest<Doctor[]>(endpoint, Doctor[].class,
                         new Response.Listener<Doctor[]>() {
