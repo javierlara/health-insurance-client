@@ -31,4 +31,30 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="service_not_available">Servicio no disponible</string>
+    <string name="invalid_lat_long_used">Dirección inválida</string>
+    <string name="no_address_found">Dirección no encontrada</string>
+    <string name="address_found">Dirección encontrada</string>
+    <string name="nav_map">Mapa</string>
+    <string name="title_activity_current_location">CurrentLocationActivity</string>
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
+    <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
+    <string name="nav_current_location">Ubicación actual</string>
+
+    <!-- LOCATION ACTIVITY -->
+    <string name="location_latitude_label">Latitude</string>
+    <string name="location_longitude_label">Longitude</string>
+    <string name="last_update_time_label">Last location update time</string>
+
+    <string name="start_updates">Start updates</string>
+    <string name="stop_updates">Stop updates</string>
+    <string name="location_updated_message">Location updated</string>
+    <string name="nav_cartilla">Cartilla</string>
+    <string name="plan_filter_label">Plan</string>
+    <string name="speciality_filter_label">Especialidad</string>
+    <string name="cartilla_button_submit_label">Buscar</string>
+    <string name="location_filter_label">Ordenar por ubicación</string>
+
 </resources>
