@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,8 @@ import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
 import com.apres.apresmovil.network.ApiHelper;
+import com.apres.apresmovil.views.adapters.DoctorRecyclerViewAdapter;
+import com.apres.apresmovil.views.adapters.MyNewsItemRecyclerViewAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -31,6 +36,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +53,7 @@ public class CartillaFragment extends Fragment implements
     protected static final String LOCATION_TAG = "Location";
 
     private OnFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener mListenerList;
 
     private ApiHelper mApiHelper = new ApiHelper();
 
@@ -59,6 +66,9 @@ public class CartillaFragment extends Fragment implements
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest locationRequest;
     protected FusedLocationProviderApi fusedLocationProviderApi;
+
+    private List<Doctor> mDoctorList;
+    private DoctorRecyclerViewAdapter mDoctorAdapter;
 
     public CartillaFragment() {
     }
@@ -219,6 +229,14 @@ public class CartillaFragment extends Fragment implements
             }
         });
 
+        mDoctorList = new ArrayList<>();
+        mDoctorAdapter = new DoctorRecyclerViewAdapter(mDoctorList, mListenerList);
+
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cartilla_list);;
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(mDoctorAdapter);
+
         return view;
     }
 
@@ -241,6 +259,9 @@ public class CartillaFragment extends Fragment implements
         mApiHelper.getCartilla(mPlanId, mSpecialityId, latitude, longitude, new ApiHelper.ApiHelperCallback() {
             @Override
             public void onSuccess(List list) {
+                mDoctorList.clear();
+                mDoctorList.addAll(list);
+                mDoctorAdapter.notifyDataSetChanged();
                 Log.i("CARTILLA", list.toString());
             }
 
@@ -282,5 +303,9 @@ public class CartillaFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(Doctor item);
     }
 }

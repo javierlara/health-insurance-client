@@ -18,6 +18,7 @@ import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
 import com.apres.apresmovil.fragments.NewsItemFragment;
+import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity
             NavigationView.OnNavigationItemSelectedListener,
             HealthCenterItemFragment.OnListFragmentInteractionListener,
             NewsItemFragment.OnListFragmentInteractionListener,
-            CartillaFragment.OnFragmentInteractionListener
+            CartillaFragment.OnFragmentInteractionListener,
+            CartillaFragment.OnListFragmentInteractionListener
 {
 
     @Override
@@ -114,6 +116,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void onListFragmentInteraction(Doctor item) {
 
     }
 
