@@ -1,5 +1,6 @@
 package com.apres.apresmovil.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,12 +36,13 @@ public class NewsItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private NewsItemFragment.OnListFragmentInteractionListener mListener;
-    private ApiHelper mApiHelper = new ApiHelper();
+    private ApiHelper mApiHelper;
     private List<News> mNewsList;
     private MyNewsItemRecyclerViewAdapter mNewsAdapter;
 
     public NewsItemFragment() {
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -112,6 +114,7 @@ public class NewsItemFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+        mApiHelper = new ApiHelper(context);
     }
 
     @Override

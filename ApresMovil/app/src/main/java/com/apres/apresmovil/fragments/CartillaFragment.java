@@ -55,7 +55,7 @@ public class CartillaFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
     private OnListFragmentInteractionListener mListenerList;
 
-    private ApiHelper mApiHelper = new ApiHelper();
+    private ApiHelper mApiHelper;
 
     private Context mContext;
 
@@ -282,6 +282,7 @@ public class CartillaFragment extends Fragment implements
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        mApiHelper = new ApiHelper(context);
     }
 
     @Override

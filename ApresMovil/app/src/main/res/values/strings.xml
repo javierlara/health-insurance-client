@@ -55,6 +55,6 @@
     <string name="plan_filter_label">Plan</string>
     <string name="speciality_filter_label">Especialidad</string>
     <string name="cartilla_button_submit_label">Buscar</string>
-    <string name="location_filter_label">Ordenar por ubicación</string>
+    <string name="location_filter_label">Más cercanos primero</string>
 
 </resources>
