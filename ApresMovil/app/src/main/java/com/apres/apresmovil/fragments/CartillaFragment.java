@@ -1,9 +1,16 @@
 package com.apres.apresmovil.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +27,16 @@ import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
 import com.apres.apresmovil.network.ApiHelper;
+import com.apres.apresmovil.views.adapters.DoctorRecyclerViewAdapter;
+import com.apres.apresmovil.views.adapters.MyNewsItemRecyclerViewAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,17 +47,28 @@ import java.util.List;
  * Use the {@link CartillaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CartillaFragment extends Fragment {
+public class CartillaFragment extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+    protected static final String LOCATION_TAG = "Location";
 
     private OnFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener mListenerList;
 
-    private ApiHelper mApiHelper = new ApiHelper();
+    private ApiHelper mApiHelper;
 
     private Context mContext;
 
     private String mSpecialityId;
-
     private String mPlanId;
+    private Location mLocation;
+
+    protected GoogleApiClient mGoogleApiClient;
+    protected LocationRequest locationRequest;
+    protected FusedLocationProviderApi fusedLocationProviderApi;
+
+    private List<Doctor> mDoctorList;
+    private DoctorRecyclerViewAdapter mDoctorAdapter;
 
     public CartillaFragment() {
     }
@@ -62,6 +88,73 @@ public class CartillaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLocation();
+    }
+
+    private void getLocation() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        fusedLocationProviderApi = LocationServices.FusedLocationApi;
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    /**
+     * Runs when a GoogleApiClient object successfully connects.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1);
+            return;
+        }
+        fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLocation = location;
+        Log.d(LOCATION_TAG, "change to " + mLocation.toString());
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i(LOCATION_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+
+        Log.i(LOCATION_TAG, "Connection suspended");
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -136,6 +229,14 @@ public class CartillaFragment extends Fragment {
             }
         });
 
+        mDoctorList = new ArrayList<>();
+        mDoctorAdapter = new DoctorRecyclerViewAdapter(mDoctorList, mListenerList);
+
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cartilla_list);;
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(mDoctorAdapter);
+
         return view;
     }
 
@@ -147,23 +248,20 @@ public class CartillaFragment extends Fragment {
 
     public void onCartillaButton() {
         Switch locationSwitch = (Switch) getView().findViewById(R.id.location_filter);
-        boolean location_filter = locationSwitch.isChecked();
+        boolean location_filter_enabled = locationSwitch.isChecked();
+        String latitude = "";
+        String longitude = "";
+        if(location_filter_enabled && mLocation != null) {
+            latitude = String.valueOf(mLocation.getLatitude());
+            longitude = String.valueOf(mLocation.getLongitude());
+        }
 
-//        mApiHelper.getDoctors(new ApiHelper.ApiHelperCallback() {
-//            @Override
-//            public void onSuccess(List list) {
-//                Log.i("DOCTORS", list.toString());
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//                Log.e("DOCTORS", e.getMessage());
-//            }
-//        });
-
-        mApiHelper.getCartilla(mPlanId, mSpecialityId, "", new ApiHelper.ApiHelperCallback() {
+        mApiHelper.getCartilla(mPlanId, mSpecialityId, latitude, longitude, new ApiHelper.ApiHelperCallback() {
             @Override
             public void onSuccess(List list) {
+                mDoctorList.clear();
+                mDoctorList.addAll(list);
+                mDoctorAdapter.notifyDataSetChanged();
                 Log.i("CARTILLA", list.toString());
             }
 
@@ -184,6 +282,7 @@ public class CartillaFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        mApiHelper = new ApiHelper(context);
     }
 
     @Override
@@ -205,5 +304,9 @@ public class CartillaFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(Doctor item);
     }
 }

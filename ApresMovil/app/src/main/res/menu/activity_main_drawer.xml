@@ -9,12 +9,6 @@
             android:id="@+id/nav_news"
             android:title="@string/nav_news" />
         <item
-            android:id="@+id/nav_map"
-            android:title="@string/nav_map" />
-        <item
-            android:id="@+id/nav_current_location"
-            android:title="@string/nav_current_location" />
-        <item
             android:id="@+id/nav_cartilla"
             android:title="@string/nav_cartilla" />
     </group>

@@ -32,7 +32,7 @@ public class HealthCenterItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private ApiHelper mApiHelper = new ApiHelper();
+    private ApiHelper mApiHelper;
     private List<HealthCenter> mHealthCenterList;
     private MyHealthCenterItemRecyclerViewAdapter mHealthCenterAdapter;
 
@@ -108,6 +108,7 @@ public class HealthCenterItemFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+        mApiHelper = new ApiHelper(context);
     }
 
     @Override

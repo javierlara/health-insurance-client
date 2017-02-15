@@ -18,6 +18,7 @@ import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
 import com.apres.apresmovil.fragments.NewsItemFragment;
+import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity
             NavigationView.OnNavigationItemSelectedListener,
             HealthCenterItemFragment.OnListFragmentInteractionListener,
             NewsItemFragment.OnListFragmentInteractionListener,
-            CartillaFragment.OnFragmentInteractionListener
+            CartillaFragment.OnFragmentInteractionListener,
+            CartillaFragment.OnListFragmentInteractionListener
 {
 
     @Override
@@ -89,15 +91,6 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
-//        } else if (id == R.id.nav_map) {
-//            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-//            startActivity(intent);
-//        } else if (id == R.id.nav_map) {
-//            Intent intent = new Intent(MainActivity.this, LocationActivity.class);
-//            startActivity(intent);
-        } else if (id == R.id.nav_current_location) {
-            Intent intent = new Intent(MainActivity.this, CurrentLocation2Activity.class);
-            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -114,6 +107,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void onListFragmentInteraction(Doctor item) {
 
     }
 
