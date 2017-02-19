@@ -240,12 +240,6 @@ public class CartillaFragment extends Fragment implements
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     public void onCartillaButton() {
         Switch locationSwitch = (Switch) getView().findViewById(R.id.location_filter);
         boolean location_filter_enabled = locationSwitch.isChecked();
@@ -276,11 +270,11 @@ public class CartillaFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListenerList = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnListFragmentInteractionListener");
         }
         mApiHelper = new ApiHelper(context);
     }

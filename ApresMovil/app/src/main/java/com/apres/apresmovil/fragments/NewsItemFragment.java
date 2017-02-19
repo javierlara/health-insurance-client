@@ -34,7 +34,7 @@ public class NewsItemFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private int mColumnCount;
     private NewsItemFragment.OnListFragmentInteractionListener mListener;
     private ApiHelper mApiHelper;
     private List<News> mNewsList;
@@ -51,10 +51,10 @@ public class NewsItemFragment extends Fragment {
      * @return A new instance of fragment NewsItemFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsItemFragment newInstance(int columnCount) {
+    public static NewsItemFragment newInstance() {
         NewsItemFragment fragment = new NewsItemFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(ARG_COLUMN_COUNT, 1);
         fragment.setArguments(args);
         return fragment;
     }
