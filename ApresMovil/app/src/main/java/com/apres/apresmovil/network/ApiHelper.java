@@ -4,20 +4,30 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.R;
+import com.apres.apresmovil.models.ScheduleContainer;
+import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
+import com.google.android.gms.plus.model.people.Person;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -246,6 +256,36 @@ public class ApiHelper {
                             public void onResponse(Speciality[] response) {
                                 List<Speciality> specialities = Arrays.asList(response);
                                 callback.onSuccess(specialities);
+                                mProgress.dismiss();
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                                mProgress.dismiss();
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getSchedule(String doctorId, String month, String year, final ApiHelperCallback callback) {
+        mProgress.show();
+
+        String endpoint = DOCTORS_ENDPOINT + "/" + doctorId + "/schedule/" + month + "/" + year;
+
+        GsonRequest<ScheduleContainer> request =
+                new GsonRequest<ScheduleContainer>(endpoint, ScheduleContainer.class,
+                        new Response.Listener<ScheduleContainer>() {
+                            @Override
+                            public void onResponse(ScheduleContainer response) {
+                                List<ScheduleContainer> scheduleContainers = new ArrayList<ScheduleContainer>();
+                                scheduleContainers.add(response);
+                                callback.onSuccess(scheduleContainers);
                                 mProgress.dismiss();
                             }
 

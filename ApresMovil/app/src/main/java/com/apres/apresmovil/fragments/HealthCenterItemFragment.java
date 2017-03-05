@@ -1,5 +1,6 @@
 package com.apres.apresmovil.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -27,10 +28,8 @@ import java.util.List;
  */
 public class HealthCenterItemFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private int mColumnCount;
     private OnListFragmentInteractionListener mListener;
     private ApiHelper mApiHelper;
     private List<HealthCenter> mHealthCenterList;
@@ -43,12 +42,10 @@ public class HealthCenterItemFragment extends Fragment {
     public HealthCenterItemFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static HealthCenterItemFragment newInstance(int columnCount) {
+    public static HealthCenterItemFragment newInstance() {
         HealthCenterItemFragment fragment = new HealthCenterItemFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(ARG_COLUMN_COUNT, 1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,6 +99,16 @@ public class HealthCenterItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    public void commonOnAttach(Context context) {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {

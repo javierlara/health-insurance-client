@@ -56,5 +56,8 @@
     <string name="speciality_filter_label">Especialidad</string>
     <string name="cartilla_button_submit_label">Buscar</string>
     <string name="location_filter_label">Más cercanos primero</string>
+    <string name="appointment_time_start_label">Horario</string>
+    <string name="appointment_button_submit_label">Confirmar</string>
+    <string name="doctor">Doctor</string>
 
 </resources>

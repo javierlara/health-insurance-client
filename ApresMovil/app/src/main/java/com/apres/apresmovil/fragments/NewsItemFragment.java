@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewsItemFragment.OnFragmentInteractionListener} interface
+ * {@link NewsItemFragment.OnListFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link NewsItemFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -34,7 +34,7 @@ public class NewsItemFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private int mColumnCount;
     private NewsItemFragment.OnListFragmentInteractionListener mListener;
     private ApiHelper mApiHelper;
     private List<News> mNewsList;
@@ -51,10 +51,10 @@ public class NewsItemFragment extends Fragment {
      * @return A new instance of fragment NewsItemFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsItemFragment newInstance(int columnCount) {
+    public static NewsItemFragment newInstance() {
         NewsItemFragment fragment = new NewsItemFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(ARG_COLUMN_COUNT, 1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,7 +74,7 @@ public class NewsItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_healthcenteritem_list, container, false);
 
         mNewsList = new ArrayList<>();
-        mNewsAdapter = new MyNewsItemRecyclerViewAdapter(mNewsList, mListener, getContext());
+        mNewsAdapter = new MyNewsItemRecyclerViewAdapter(mNewsList, mListener, getActivity());
 
         mApiHelper.getNewses(new ApiHelper.ApiHelperCallback() {
             @Override
@@ -108,6 +108,19 @@ public class NewsItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        commonOnAttach(context);
+
+    }
+
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        commonOnAttach(context);
+
+    }
+
+
+    public void commonOnAttach(Context context) {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {

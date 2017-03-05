@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.apres.apresmovil.R;
+import com.apres.apresmovil.fragments.AppointmentFragment;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
 import com.apres.apresmovil.fragments.NewsItemFragment;
@@ -27,8 +28,9 @@ public class MainActivity extends AppCompatActivity
             NavigationView.OnNavigationItemSelectedListener,
             HealthCenterItemFragment.OnListFragmentInteractionListener,
             NewsItemFragment.OnListFragmentInteractionListener,
-            CartillaFragment.OnFragmentInteractionListener,
-            CartillaFragment.OnListFragmentInteractionListener
+//            CartillaFragment.OnFragmentInteractionListener,
+            CartillaFragment.OnListFragmentInteractionListener,
+            AppointmentFragment.OnFragmentInteractionListener
 {
 
     @Override
@@ -73,20 +75,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_health_centers) {
-            Fragment fragment = new HealthCenterItemFragment();
-            // Insert the fragment by replacing any existing fragment
+            Fragment fragment = HealthCenterItemFragment.newInstance();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
         } else if (id == R.id.nav_news) {
-            Fragment fragment = new NewsItemFragment();
+            Fragment fragment = NewsItemFragment.newInstance();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
         } else if (id == R.id.nav_cartilla) {
-            Fragment fragment = new CartillaFragment();
+            Fragment fragment = CartillaFragment.newInstance();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
@@ -110,8 +111,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void onListFragmentInteraction(Doctor item) {
-
+    public void onListFragmentInteraction(Doctor doctor) {
+        Fragment fragment = AppointmentFragment.newInstance(doctor);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack("appointment_" + doctor.id)
+                .commit();
     }
 
 }

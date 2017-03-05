@@ -2,18 +2,15 @@ package com.apres.apresmovil.views.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.CartillaFragment;
-import com.apres.apresmovil.fragments.NewsItemFragment;
 import com.apres.apresmovil.models.Doctor;
-import com.apres.apresmovil.models.News;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -81,5 +78,6 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
         public String toString() {
             return super.toString() + " '" + mNameView.getText() + "'";
         }
+
     }
 }
