@@ -1,5 +1,6 @@
 package com.apres.apresmovil.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -182,6 +183,16 @@ public class AppointmentFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    public void commonOnAttach(Context context) {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -214,6 +225,7 @@ public class AppointmentFragment extends Fragment {
 
     public void onAppointmentButton() {
         if(mSlot != null) {
+            
             Log.i("APPOINTMENT", mSlot.toString());
         }
     }

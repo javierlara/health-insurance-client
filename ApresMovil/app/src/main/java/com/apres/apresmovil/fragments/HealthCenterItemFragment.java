@@ -1,5 +1,6 @@
 package com.apres.apresmovil.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -98,6 +99,16 @@ public class HealthCenterItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    public void commonOnAttach(Context context) {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {

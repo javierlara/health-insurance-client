@@ -12,45 +12,66 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/appointment_doctor_name"
         android:layout_gravity="center_horizontal"
-        android:text="Doctor" />
+        android:text="@string/doctor" />
 
-    <ScrollView
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" >-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <CalendarView
+            android:id="@+id/appointmentCalendarView"
+            android:layout_width="match_parent"
+            android:layout_height="338dp"
+            android:layout_gravity="center_horizontal"
+            android:selectedWeekBackgroundColor="@color/transparent"
+            android:showWeekNumber="false" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <CalendarView
+            <LinearLayout
+                android:layout_width="211dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/appointment_time_start_label"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/appointment_time_start"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/appointmentCalendarView"
-                android:layout_gravity="center_horizontal" />
+                android:layout_height="match_parent">
 
+                <Button
+                    android:id="@+id/appointment_button_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:nestedScrollingEnabled="true"
+                    android:text="@string/appointment_button_submit_label"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/appointment_time_start_label"
-                android:textSize="12sp"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:paddingRight="16dp" />
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/appointment_time_start"
-                style="@style/Widget.AppCompat.Spinner.Underlined"
-                />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/appointment_button_submit_label"
-                android:id="@+id/appointment_button_submit"
-                android:layout_gravity="center_horizontal"
-                android:nestedScrollingEnabled="true" />
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+    <!--</ScrollView>-->
 </LinearLayout>

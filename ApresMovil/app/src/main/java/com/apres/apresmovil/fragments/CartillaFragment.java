@@ -1,6 +1,7 @@
 package com.apres.apresmovil.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -69,6 +71,9 @@ public class CartillaFragment extends Fragment implements
 
     private List<Doctor> mDoctorList;
     private DoctorRecyclerViewAdapter mDoctorAdapter;
+
+    private List<Plan> mPlans;
+    private List<Speciality> mSpecialities;
 
     public CartillaFragment() {
     }
@@ -146,7 +151,7 @@ public class CartillaFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.i(LOCATION_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+         Log.e(LOCATION_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
 
@@ -162,63 +167,41 @@ public class CartillaFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cartilla, container, false);
 
-        mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
-            @Override
-            public void onSuccess(List list) {
-                Spinner spinner = (Spinner) getView().findViewById(R.id.plan_filter);
-                ArrayAdapter<Plan> adapter = new ArrayAdapter<Plan>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
-                spinner.setAdapter(adapter);
+        if(mPlans == null) {
+            mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    setPlanList(list);
+                    Log.i("PLANS", list.toString());
+                    mPlans = list;
+                }
 
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                @Override
+                public void onError(Exception e) {
+                    Log.e("PLANS", e.getMessage());
+                }
+            });
+        } else {
+            setPlanList(mPlans);
+        }
 
-                        Plan plan = (Plan) parent.getSelectedItem();
-                        mPlanId = plan.id;
-//                        Toast.makeText(getActivity(), "Plan ID: " + plan.id + ",  Plan Name : " + plan.name, Toast.LENGTH_SHORT).show();
-                    }
+        if(mSpecialities == null) {
+            mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    setSpecialityList(view, list);
+                    Log.i("SPECIALITIES", list.toString());
+                    mSpecialities = list;
+                }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                });
-                Log.i("PLANS", list.toString());
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e("PLANS", e.getMessage());
-            }
-        });
-
-        mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
-            @Override
-            public void onSuccess(List list) {
-                Spinner spinner = (Spinner) view.findViewById(R.id.speciality_filter);
-                ArrayAdapter<Speciality> adapter = new ArrayAdapter<Speciality>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
-                spinner.setAdapter(adapter);
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        Speciality speciality = (Speciality) parent.getSelectedItem();
-                        mSpecialityId = speciality.id;
-//                        Toast.makeText(getActivity(), "Speciality ID: " + speciality.id + ",  Speciality Name : " + speciality.name, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                });
-                Log.i("SPECIALITIES", list.toString());
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e("SPECIALITIES", e.getMessage());
-            }
-        });
+                @Override
+                public void onError(Exception e) {
+                    Log.e("SPECIALITIES", e.getMessage());
+                }
+            });
+        } else {
+            setSpecialityList(view, mSpecialities);
+        }
 
         Button clickButton = (Button) view.findViewById(R.id.cartilla_button_submit);
         clickButton.setOnClickListener(new View.OnClickListener() {
@@ -238,6 +221,46 @@ public class CartillaFragment extends Fragment implements
         recyclerView.setAdapter(mDoctorAdapter);
 
         return view;
+    }
+
+    public void setPlanList(List list) {
+        Spinner spinner = (Spinner) getView().findViewById(R.id.plan_filter);
+        ArrayAdapter<Plan> adapter = new ArrayAdapter<Plan>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Plan plan = (Plan) parent.getSelectedItem();
+                mPlanId = plan.id;
+                //                        Toast.makeText(getActivity(), "Plan ID: " + plan.id + ",  Plan Name : " + plan.name, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    public void setSpecialityList(View view, List list) {
+        Spinner spinner = (Spinner) view.findViewById(R.id.speciality_filter);
+        ArrayAdapter<Speciality> adapter = new ArrayAdapter<Speciality>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Speciality speciality = (Speciality) parent.getSelectedItem();
+                mSpecialityId = speciality.id;
+                //                        Toast.makeText(getActivity(), "Speciality ID: " + speciality.id + ",  Speciality Name : " + speciality.name, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     public void onCartillaButton() {
@@ -270,6 +293,16 @@ public class CartillaFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        commonOnAttach(context);
+    }
+
+    public void commonOnAttach(Context context) {
         if (context instanceof OnListFragmentInteractionListener) {
             mListenerList = (OnListFragmentInteractionListener) context;
         } else {
