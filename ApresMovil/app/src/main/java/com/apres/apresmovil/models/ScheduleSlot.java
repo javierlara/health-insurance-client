@@ -35,4 +35,19 @@ public class ScheduleSlot {
         }
         return returnFormat.format(date);
     }
+
+    public String getStartMilliseconds() {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
+
+//        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date date;
+        try {
+            date = inputFormat.parse(start);
+        } catch (ParseException e) {
+            return start;
+        }
+
+        return String.valueOf(date.getTime());
+    }
 }

@@ -232,8 +232,21 @@ public class AppointmentFragment extends Fragment {
 
     public void onAppointmentButton() {
         if(mSlot != null) {
-            Member member = session.getCurrentMember();
             Log.i("APPOINTMENT", mSlot.toString());
+            Member member = session.getCurrentMember();
+            mApiHelper.postAppointment(mDoctor.id, member.id, mSlot.getStartMilliseconds(), new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    if (list.size() == 1) {
+                        Log.i("APPOINTMENT", list.toString());
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("APPOINTMENT", e.getMessage());
+                }
+            });
         }
     }
 }
