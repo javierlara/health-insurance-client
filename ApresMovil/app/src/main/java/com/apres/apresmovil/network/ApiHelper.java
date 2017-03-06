@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.R;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.models.Doctor;
@@ -99,6 +100,7 @@ public class ApiHelper {
     final static String DOCTORS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/doctors";
     final static String SPECIALITIES_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/specialities";
     final static String CARTILLA_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/cartilla";
+    final static String MEMBER_ENDPOINT= "https://health-insurance-stage.herokuapp.com/api/members";
 
     ProgressDialog mProgress;
 
@@ -295,6 +297,36 @@ public class ApiHelper {
                             public void onErrorResponse(VolleyError error) {
                                 callback.onError(error);
                                 mProgress.dismiss();
+                            }
+                        }
+                );
+
+        helper.add(request);
+
+    }
+
+    public void getMemberByNumber(String memberNumber, final ApiHelperCallback callback) {
+//        mProgress.show();
+
+        String endpoint = MEMBER_ENDPOINT + "/number/" + memberNumber;
+
+        GsonRequest<Member> request =
+                new GsonRequest<Member>(endpoint, Member.class,
+                        new Response.Listener<Member>() {
+                            @Override
+                            public void onResponse(Member response) {
+                                List<Member> members = new ArrayList<Member>();
+                                members.add(response);
+                                callback.onSuccess(members);
+                                mProgress.dismiss();
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+//                                mProgress.dismiss();
                             }
                         }
                 );
