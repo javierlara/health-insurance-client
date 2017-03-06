@@ -18,10 +18,12 @@ import android.widget.TextView;
 
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.models.Doctor;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.network.ApiHelper;
+import com.apres.apresmovil.utils.Session;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +47,8 @@ public class AppointmentFragment extends Fragment {
     private ApiHelper mApiHelper;
 
     private CalendarView mCalendar;
+
+    private Session session;
 
     private int currentMonth;
     private int currentDay;
@@ -199,7 +203,10 @@ public class AppointmentFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
         mApiHelper = new ApiHelper(context);
+
+        session = new Session(getActivity());
     }
 
     @Override
@@ -225,8 +232,21 @@ public class AppointmentFragment extends Fragment {
 
     public void onAppointmentButton() {
         if(mSlot != null) {
-            
             Log.i("APPOINTMENT", mSlot.toString());
+            Member member = session.getCurrentMember();
+            mApiHelper.postAppointment(mDoctor.id, member.id, mSlot.getStartMilliseconds(), new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    if (list.size() == 1) {
+                        Log.i("APPOINTMENT", list.toString());
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("APPOINTMENT", e.getMessage());
+                }
+            });
         }
     }
 }

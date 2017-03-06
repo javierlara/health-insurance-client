@@ -4,32 +4,30 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.NetworkResponse;
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.R;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.models.ScheduleContainer;
-import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
-import com.google.android.gms.plus.model.people.Person;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by javierlara on 11/12/16.
@@ -50,45 +48,6 @@ public class ApiHelper {
         void onError(Exception error);
     }
 
-    private void getRequest(String endpoint, final ApiHelperCallback callback) {
-        JsonArrayRequest request = new JsonArrayRequest
-                (Request.Method.GET, endpoint, null, new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-//
-//                            String minTemp, maxTemp, atmo;
-//                            int avgTemp;
-//
-//                            response = response.getJSONObject("report");
-//
-//                            minTemp = response.getString("min_temp"); minTemp = minTemp.substring(0, minTemp.indexOf("."));
-//                            maxTemp = response.getString("max_temp"); maxTemp = maxTemp.substring(0, maxTemp.indexOf("."));
-//
-//                            avgTemp = (Integer.parseInt(minTemp)+Integer.parseInt(maxTemp))/2;
-//
-//                            atmo = response.getString("atmo_opacity");
-
-
-//                            callback.onSuccess(response);
-
-                        } catch (Exception e) {
-                            callback.onError(e);
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        callback.onError(error);
-                    }
-                });
-
-        helper.add(request);
-    }
-
 
     /***
      * TODO: MOVE THIS TO ANOTHER CLASS
@@ -99,6 +58,8 @@ public class ApiHelper {
     final static String DOCTORS_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/doctors";
     final static String SPECIALITIES_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/specialities";
     final static String CARTILLA_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/cartilla";
+    final static String MEMBER_ENDPOINT= "https://health-insurance-stage.herokuapp.com/api/members";
+    final static String APPOINTMENT_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/appointment";
 
     ProgressDialog mProgress;
 
@@ -106,7 +67,8 @@ public class ApiHelper {
 //        getRequest(HEALTH_CENTERS_ENDPOINT, callback);
         mProgress.show();
         GsonRequest<HealthCenter[]> request =
-                new GsonRequest<HealthCenter[]>(HEALTH_CENTERS_ENDPOINT, HealthCenter[].class,
+                new GsonRequest<HealthCenter[]>(Request.Method.GET, HEALTH_CENTERS_ENDPOINT,
+                        HealthCenter[].class,
                         new Response.Listener<HealthCenter[]>() {
                             @Override
                             public void onResponse(HealthCenter[] response) {
@@ -122,8 +84,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -132,7 +93,8 @@ public class ApiHelper {
     public void getNewses(final ApiHelperCallback callback) {
         mProgress.show();
         GsonRequest<News[]> request =
-                new GsonRequest<News[]>(NEWS_ENDPOINT, News[].class,
+                new GsonRequest<News[]>(Request.Method.GET, NEWS_ENDPOINT,
+                        News[].class,
                         new Response.Listener<News[]>() {
                             @Override
                             public void onResponse(News[] response) {
@@ -148,8 +110,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -158,7 +119,8 @@ public class ApiHelper {
     public void getPlans(final ApiHelperCallback callback) {
         mProgress.show();
         GsonRequest<Plan[]> request =
-                new GsonRequest<Plan[]>(PLANS_ENDPOINT, Plan[].class,
+                new GsonRequest<Plan[]>(Request.Method.GET, PLANS_ENDPOINT,
+                        Plan[].class,
                         new Response.Listener<Plan[]>() {
                             @Override
                             public void onResponse(Plan[] response) {
@@ -174,8 +136,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -184,7 +145,8 @@ public class ApiHelper {
     public void getDoctors(final ApiHelperCallback callback) {
         mProgress.show();
         GsonRequest<Doctor[]> request =
-                new GsonRequest<Doctor[]>(DOCTORS_ENDPOINT, Doctor[].class,
+                new GsonRequest<Doctor[]>(Request.Method.GET, DOCTORS_ENDPOINT,
+                        Doctor[].class,
                         new Response.Listener<Doctor[]>() {
                             @Override
                             public void onResponse(Doctor[] response) {
@@ -200,8 +162,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -224,7 +185,8 @@ public class ApiHelper {
 
         mProgress.show();
         GsonRequest<Doctor[]> request =
-                new GsonRequest<Doctor[]>(endpoint, Doctor[].class,
+                new GsonRequest<Doctor[]>(Request.Method.GET, endpoint,
+                        Doctor[].class,
                         new Response.Listener<Doctor[]>() {
                             @Override
                             public void onResponse(Doctor[] response) {
@@ -240,8 +202,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -250,7 +211,8 @@ public class ApiHelper {
     public void getSpecialitites(final ApiHelperCallback callback) {
         mProgress.show();
         GsonRequest<Speciality[]> request =
-                new GsonRequest<Speciality[]>(SPECIALITIES_ENDPOINT, Speciality[].class,
+                new GsonRequest<Speciality[]>(Request.Method.GET, SPECIALITIES_ENDPOINT,
+                        Speciality[].class,
                         new Response.Listener<Speciality[]>() {
                             @Override
                             public void onResponse(Speciality[] response) {
@@ -266,8 +228,7 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
@@ -279,7 +240,8 @@ public class ApiHelper {
         String endpoint = DOCTORS_ENDPOINT + "/" + doctorId + "/schedule/" + month + "/" + year;
 
         GsonRequest<ScheduleContainer> request =
-                new GsonRequest<ScheduleContainer>(endpoint, ScheduleContainer.class,
+                new GsonRequest<ScheduleContainer>(Request.Method.GET, endpoint,
+                        ScheduleContainer.class,
                         new Response.Listener<ScheduleContainer>() {
                             @Override
                             public void onResponse(ScheduleContainer response) {
@@ -296,10 +258,83 @@ public class ApiHelper {
                                 callback.onError(error);
                                 mProgress.dismiss();
                             }
-                        }
-                );
+                        });
 
         helper.add(request);
 
+    }
+
+    public void getMemberByNumber(String memberNumber, final ApiHelperCallback callback) {
+//        mProgress.show();
+
+        String endpoint = MEMBER_ENDPOINT + "/number/" + memberNumber;
+
+        GsonRequest<Member> request =
+                new GsonRequest<Member>(Request.Method.GET, endpoint,
+                        Member.class,
+                        new Response.Listener<Member>() {
+                            @Override
+                            public void onResponse(Member response) {
+                                List<Member> members = new ArrayList<Member>();
+                                members.add(response);
+                                callback.onSuccess(members);
+                                mProgress.dismiss();
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+//                                mProgress.dismiss();
+                            }
+                        });
+
+        helper.add(request);
+
+    }
+
+    public void postAppointment(String doctorId, String memberId, String start, ApiHelperCallback apiHelperCallback) {
+        mProgress.show();
+
+        String endpoint = APPOINTMENT_ENDPOINT;
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("doctor_id", doctorId);
+            jsonBody.put("member_id", memberId);
+            jsonBody.put("start", start);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request
+                = new JsonObjectRequest(Request.Method.POST, endpoint, jsonBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.i("APPOINTMENTPOST", response.toString());
+                    mProgress.hide();
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("APPOINTMENTPOST", error.toString());
+                    mProgress.hide();
+                }
+            }) {
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        helper.add(request);
     }
 }

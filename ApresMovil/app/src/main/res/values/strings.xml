@@ -59,5 +59,8 @@
     <string name="appointment_time_start_label">Horario</string>
     <string name="appointment_button_submit_label">Confirmar</string>
     <string name="doctor">Doctor</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="welcome">Bienvenido a Apres Movil! Ingresá tu número de socio</string>
+    <string name="prompt_member">Nro de socio</string>
 
 </resources>
