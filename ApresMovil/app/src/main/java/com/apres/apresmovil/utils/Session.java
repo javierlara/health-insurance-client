@@ -2,7 +2,6 @@ package com.apres.apresmovil.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.apres.apresmovil.models.Member;
 import com.google.gson.Gson;

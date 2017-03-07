@@ -13,47 +13,47 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.models.News;
+import com.apres.apresmovil.models.Appointment;
+import com.apres.apresmovil.models.AppointmentContainer;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.network.ApiHelper;
-import com.apres.apresmovil.views.adapters.MyNewsItemRecyclerViewAdapter;
+import com.apres.apresmovil.utils.Session;
+import com.apres.apresmovil.views.adapters.MyAppointmentHistoryRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsItemFragment.OnListFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsItemFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment representing a list of Items.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * interface.
  */
-public class NewsItemFragment extends Fragment {
+public class MyAppointmentsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount;
-    private NewsItemFragment.OnListFragmentInteractionListener mListener;
+    private int mColumnCount = 1;
+    private OnListFragmentInteractionListener mListener;
+    private Session session;
     private ApiHelper mApiHelper;
-    private List<News> mNewsList;
-    private MyNewsItemRecyclerViewAdapter mNewsAdapter;
-
-    public NewsItemFragment() {
-    }
-
+    private List<Appointment> mAppointmentList;
+    private MyAppointmentHistoryRecyclerViewAdapter mAppointmentAdapter;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment NewsItemFragment.
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
      */
-    // TODO: Rename and change types and number of parameters
-    public static NewsItemFragment newInstance() {
-        NewsItemFragment fragment = new NewsItemFragment();
+    public MyAppointmentsFragment() {
+    }
+
+    // TODO: Customize parameter initialization
+    @SuppressWarnings("unused")
+    public static MyAppointmentsFragment newInstance(int columnCount) {
+        MyAppointmentsFragment fragment = new MyAppointmentsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, 1);
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,18 +70,21 @@ public class NewsItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_healthcenteritem_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_appointmenthistory_list, container, false);
 
-        mNewsList = new ArrayList<>();
-        mNewsAdapter = new MyNewsItemRecyclerViewAdapter(mNewsList, mListener, getActivity());
+        mAppointmentList = new ArrayList<>();
+        mAppointmentAdapter = new MyAppointmentHistoryRecyclerViewAdapter(mAppointmentList, mListener);
 
-        mApiHelper.getNewses(new ApiHelper.ApiHelperCallback() {
+        Member member = session.getCurrentMember();
+
+        mApiHelper.getAppointments(member.id, new ApiHelper.ApiHelperCallback() {
             @Override
             public void onSuccess(List list) {
-                mNewsList.clear();
-                mNewsList.addAll(list);
-                mNewsAdapter.notifyDataSetChanged();
-                Log.i("NEWS", mNewsList.toString());
+                AppointmentContainer appointmentContainer = (AppointmentContainer) list.get(0);
+                mAppointmentList.clear();
+                mAppointmentList.addAll(appointmentContainer.appointments);
+                mAppointmentAdapter.notifyDataSetChanged();
+                Log.i("NEWS", mAppointmentList.toString());
             }
 
             @Override
@@ -99,25 +102,23 @@ public class NewsItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(mNewsAdapter);
+            recyclerView.setAdapter(mAppointmentAdapter);
         }
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         commonOnAttach(context);
-
     }
 
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
         commonOnAttach(context);
-
     }
-
 
     public void commonOnAttach(Context context) {
         if (context instanceof OnListFragmentInteractionListener) {
@@ -126,7 +127,10 @@ public class NewsItemFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
         mApiHelper = new ApiHelper(context);
+
+        session = new Session(getActivity());
     }
 
     @Override
@@ -135,7 +139,18 @@ public class NewsItemFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(News item);
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(Appointment item);
     }
 }

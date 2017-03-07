@@ -8,16 +8,16 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.models.Member;
-import com.apres.apresmovil.models.ScheduleContainer;
+import com.apres.apresmovil.models.AppointmentContainer;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.models.News;
 import com.apres.apresmovil.models.Plan;
+import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.Speciality;
 
 import org.json.JSONException;
@@ -60,6 +60,7 @@ public class ApiHelper {
     final static String CARTILLA_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/cartilla";
     final static String MEMBER_ENDPOINT= "https://health-insurance-stage.herokuapp.com/api/members";
     final static String APPOINTMENT_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/appointment";
+    final static String GET_MEMBER_APPOINTMENTS_ENDPOINT = "http://health-insurance-stage.herokuapp.com/api/appointments/filter?member_id=";
 
     ProgressDialog mProgress;
 
@@ -292,6 +293,35 @@ public class ApiHelper {
 
         helper.add(request);
 
+    }
+
+    public void getAppointments(String memberId, final ApiHelperCallback callback) {
+        mProgress.show();
+
+        String endpoint = GET_MEMBER_APPOINTMENTS_ENDPOINT + memberId;
+
+        GsonRequest<AppointmentContainer> request =
+                new GsonRequest<AppointmentContainer>(Request.Method.GET, endpoint,
+                        AppointmentContainer.class,
+                        new Response.Listener<AppointmentContainer>() {
+                            @Override
+                            public void onResponse(AppointmentContainer response) {
+                                List<AppointmentContainer> appointmentContainers = new ArrayList<AppointmentContainer>();
+                                appointmentContainers.add(response);
+                                callback.onSuccess(appointmentContainers);
+                                mProgress.dismiss();
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                                mProgress.dismiss();
+                            }
+                        });
+
+        helper.add(request);
     }
 
     public void postAppointment(String doctorId, String memberId, String start, ApiHelperCallback apiHelperCallback) {

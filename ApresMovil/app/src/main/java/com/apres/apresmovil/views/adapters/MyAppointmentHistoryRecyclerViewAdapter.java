@@ -1,6 +1,5 @@
 package com.apres.apresmovil.views.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,21 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.fragments.CartillaFragment;
-import com.apres.apresmovil.models.Doctor;
+import com.apres.apresmovil.fragments.MyAppointmentsFragment.OnListFragmentInteractionListener;
+import com.apres.apresmovil.models.Appointment;
 
 import java.util.List;
 
 /**
- * Created by javierlara on 2/11/17.
+ * {@link RecyclerView.Adapter} that can display a {@link Appointment} and makes a call to the
+ * specified {@link OnListFragmentInteractionListener}.
+ * TODO: Replace the implementation with code for your data type.
  */
-public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecyclerViewAdapter.ViewHolder> {
+public class MyAppointmentHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyAppointmentHistoryRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Doctor> mValues;
-    private final CartillaFragment.OnListFragmentInteractionListener mListener;
-    protected Context mContext;
+    private final List<Appointment> mValues;
+    private final OnListFragmentInteractionListener mListener;
 
-    public DoctorRecyclerViewAdapter(List<Doctor> items, CartillaFragment.OnListFragmentInteractionListener listener) {
+    public MyAppointmentHistoryRecyclerViewAdapter(List<Appointment> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -30,16 +30,15 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_cartillaitem, parent, false);
+                .inflate(R.layout.fragment_appointmenthistory, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).name);
-        holder.mAddressView.setText(mValues.get(position).address);
-        holder.mTelephoneView.setText(mValues.get(position).telephone);
+        holder.mIdView.setText(mValues.get(position).id);
+        holder.mContentView.setText(mValues.get(position).start);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,23 +59,20 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mNameView;
-        public final TextView mAddressView;
-        public final TextView mTelephoneView;
-        public Doctor mItem;
+        public final TextView mIdView;
+        public final TextView mContentView;
+        public Appointment mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.doctor_name);
-            mAddressView = (TextView) view.findViewById(R.id.doctor_address);
-            mTelephoneView = (TextView) view.findViewById(R.id.doctor_telephone);
+            mIdView = (TextView) view.findViewById(R.id.id);
+            mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mNameView.getText() + "'";
+            return super.toString() + " '" + mContentView.getText() + "'";
         }
-
     }
 }

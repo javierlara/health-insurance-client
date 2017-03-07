@@ -62,5 +62,6 @@
     <string name="ingresar">Ingresar</string>
     <string name="welcome">Bienvenido a Apres Movil! Ingresá tu número de socio</string>
     <string name="prompt_member">Nro de socio</string>
+    <string name="nav_my_appointments">Mis turnos</string>
 
 </resources>

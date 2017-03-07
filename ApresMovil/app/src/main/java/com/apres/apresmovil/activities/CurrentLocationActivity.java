@@ -3,16 +3,11 @@ package com.apres.apresmovil.activities;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-
-import com.google.android.gms.location.LocationListener;
-
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apres.apresmovil.R;
 import com.google.android.gms.common.ConnectionResult;

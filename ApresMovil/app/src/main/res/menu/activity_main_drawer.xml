@@ -11,6 +11,9 @@
         <item
             android:id="@+id/nav_cartilla"
             android:title="@string/nav_cartilla" />
+        <item
+            android:id="@+id/nav_my_appointments"
+            android:title="@string/nav_my_appointments" />
     </group>
 
 </menu>
