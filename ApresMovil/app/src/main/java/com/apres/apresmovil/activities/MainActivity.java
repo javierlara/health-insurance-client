@@ -10,10 +10,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.AppointmentFragment;
+import com.apres.apresmovil.fragments.CancelAppointmentDialogFragment;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
 import com.apres.apresmovil.fragments.MyAppointmentsFragment;
@@ -22,6 +25,9 @@ import com.apres.apresmovil.models.Appointment;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
+import com.apres.apresmovil.network.ApiHelper;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity
             AppointmentFragment.OnFragmentInteractionListener,
             MyAppointmentsFragment.OnListFragmentInteractionListener
 {
+
+    private ApiHelper mApiHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mApiHelper = new ApiHelper(this);
     }
 
     @Override
@@ -129,6 +139,35 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack("appointment_" + doctor.id)
                 .commit();
+    }
+
+    public void onAppointmentCancel(Appointment appointment) {
+        if(appointment != null) {
+            CancelAppointmentDialogFragment newFragment = CancelAppointmentDialogFragment.newInstance(appointment.id);
+            newFragment.show(getFragmentManager().beginTransaction(), "dialog");
+        }
+    }
+
+
+    public void doPositiveClick(String appointmentId) {
+        if(appointmentId != null) {
+            mApiHelper.deleteAppointment(appointmentId, new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    Log.i("APPOINTMENT_DELETED", list.toString());
+                }
+
+                @Override
+                public void onError(Exception error) {
+                    Log.e("APPOINTMENT_DELETED", error.getMessage());
+                }
+            });
+        }
+    }
+
+    public void doNegativeClick() {
+        // Do stuff here.
+        Log.i("APPOINTMENT_DELETED", "not deleted");
     }
 
 }

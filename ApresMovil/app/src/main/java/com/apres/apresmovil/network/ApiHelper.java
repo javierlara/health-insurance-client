@@ -341,19 +341,55 @@ public class ApiHelper {
 
         JsonObjectRequest request
                 = new JsonObjectRequest(Request.Method.POST, endpoint, jsonBody, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.i("APPOINTMENTPOST", response.toString());
-                    mProgress.hide();
-                }
-            }, new Response.ErrorListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i("APPOINTMENTPOST", response.toString());
+                mProgress.hide();
+            }
+        }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("APPOINTMENTPOST", error.toString());
-                    mProgress.hide();
-                }
-            }) {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("APPOINTMENTPOST", error.toString());
+                mProgress.hide();
+            }
+        }) {
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        helper.add(request);
+    }
+
+    public void deleteAppointment(String appointmentId, ApiHelperCallback apiHelperCallback) {
+        mProgress.show();
+
+        String endpoint = APPOINTMENT_ENDPOINT + '/' + appointmentId;
+
+        JSONObject jsonBody = new JSONObject();
+
+        JsonObjectRequest request
+                = new JsonObjectRequest(Request.Method.DELETE, endpoint, jsonBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i("APPOINTMENTDELETE", response.toString());
+                mProgress.hide();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("APPOINTMENTDELETE", error.toString());
+                mProgress.hide();
+            }
+        }) {
             /**
              * Passing some request headers
              */

@@ -3,6 +3,7 @@ package com.apres.apresmovil.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.network.ApiHelper;
 import com.apres.apresmovil.utils.Session;
 import com.apres.apresmovil.views.adapters.MyAppointmentHistoryRecyclerViewAdapter;
+import com.apres.apresmovil.views.itemdecorations.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class MyAppointmentsFragment extends Fragment {
     private ApiHelper mApiHelper;
     private List<Appointment> mAppointmentList;
     private MyAppointmentHistoryRecyclerViewAdapter mAppointmentAdapter;
+
+    public static final int DIALOG_FRAGMENT = 1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -84,7 +88,7 @@ public class MyAppointmentsFragment extends Fragment {
                 mAppointmentList.clear();
                 mAppointmentList.addAll(appointmentContainer.appointments);
                 mAppointmentAdapter.notifyDataSetChanged();
-                Log.i("NEWS", mAppointmentList.toString());
+                Log.i("Appointments", mAppointmentList.toString());
             }
 
             @Override
@@ -102,6 +106,7 @@ public class MyAppointmentsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
             recyclerView.setAdapter(mAppointmentAdapter);
         }
         return view;
@@ -152,5 +157,7 @@ public class MyAppointmentsFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Appointment item);
+
+        void onAppointmentCancel(Appointment mItem);
     }
 }

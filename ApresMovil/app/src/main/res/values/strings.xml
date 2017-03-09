@@ -63,5 +63,9 @@
     <string name="welcome">Bienvenido a Apres Movil! Ingresá tu número de socio</string>
     <string name="prompt_member">Nro de socio</string>
     <string name="nav_my_appointments">Mis turnos</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cancel_dialog_title">Deseas cancelar el turno?</string>
+    <string name="alert_dialog_ok">Si</string>
+    <string name="alert_dialog_cancel">No</string>
 
 </resources>
