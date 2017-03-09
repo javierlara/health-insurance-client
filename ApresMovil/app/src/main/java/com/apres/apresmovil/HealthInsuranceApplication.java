@@ -5,6 +5,9 @@ import android.app.Application;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.apres.apresmovil.network.NoSSLv3Factory;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by javierlara on 11/12/16.
@@ -18,6 +21,7 @@ public class HealthInsuranceApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        HttpsURLConnection.setDefaultSSLSocketFactory(new NoSSLv3Factory());
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 

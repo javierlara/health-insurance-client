@@ -8,16 +8,16 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.apres.apresmovil.HealthInsuranceApplication;
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.models.Member;
-import com.apres.apresmovil.models.ScheduleContainer;
+import com.apres.apresmovil.models.AppointmentContainer;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
+import com.apres.apresmovil.models.Member;
 import com.apres.apresmovil.models.News;
 import com.apres.apresmovil.models.Plan;
+import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.Speciality;
 
 import org.json.JSONException;
@@ -60,6 +60,7 @@ public class ApiHelper {
     final static String CARTILLA_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/cartilla";
     final static String MEMBER_ENDPOINT= "https://health-insurance-stage.herokuapp.com/api/members";
     final static String APPOINTMENT_ENDPOINT = "https://health-insurance-stage.herokuapp.com/api/appointment";
+    final static String GET_MEMBER_APPOINTMENTS_ENDPOINT = "http://health-insurance-stage.herokuapp.com/api/appointments/filter?member_id=";
 
     ProgressDialog mProgress;
 
@@ -294,6 +295,35 @@ public class ApiHelper {
 
     }
 
+    public void getAppointments(String memberId, final ApiHelperCallback callback) {
+        mProgress.show();
+
+        String endpoint = GET_MEMBER_APPOINTMENTS_ENDPOINT + memberId;
+
+        GsonRequest<AppointmentContainer> request =
+                new GsonRequest<AppointmentContainer>(Request.Method.GET, endpoint,
+                        AppointmentContainer.class,
+                        new Response.Listener<AppointmentContainer>() {
+                            @Override
+                            public void onResponse(AppointmentContainer response) {
+                                List<AppointmentContainer> appointmentContainers = new ArrayList<AppointmentContainer>();
+                                appointmentContainers.add(response);
+                                callback.onSuccess(appointmentContainers);
+                                mProgress.dismiss();
+                            }
+
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onError(error);
+                                mProgress.dismiss();
+                            }
+                        });
+
+        helper.add(request);
+    }
+
     public void postAppointment(String doctorId, String memberId, String start, ApiHelperCallback apiHelperCallback) {
         mProgress.show();
 
@@ -311,19 +341,55 @@ public class ApiHelper {
 
         JsonObjectRequest request
                 = new JsonObjectRequest(Request.Method.POST, endpoint, jsonBody, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.i("APPOINTMENTPOST", response.toString());
-                    mProgress.hide();
-                }
-            }, new Response.ErrorListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i("APPOINTMENTPOST", response.toString());
+                mProgress.hide();
+            }
+        }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("APPOINTMENTPOST", error.toString());
-                    mProgress.hide();
-                }
-            }) {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("APPOINTMENTPOST", error.toString());
+                mProgress.hide();
+            }
+        }) {
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        helper.add(request);
+    }
+
+    public void deleteAppointment(String appointmentId, ApiHelperCallback apiHelperCallback) {
+        mProgress.show();
+
+        String endpoint = APPOINTMENT_ENDPOINT + '/' + appointmentId;
+
+        JSONObject jsonBody = new JSONObject();
+
+        JsonObjectRequest request
+                = new JsonObjectRequest(Request.Method.DELETE, endpoint, jsonBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i("APPOINTMENTDELETE", response.toString());
+                mProgress.hide();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("APPOINTMENTDELETE", error.toString());
+                mProgress.hide();
+            }
+        }) {
             /**
              * Passing some request headers
              */

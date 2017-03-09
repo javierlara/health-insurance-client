@@ -7,19 +7,25 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * Created by javierlara on 2/15/17.
+ * Created by javierlara on 3/6/17.
  */
-public class ScheduleSlot {
+
+public class Appointment {
+    public final String id;
+    public final Integer memberId;
+    public final Doctor doctor;
     public final String start;
     public final String end;
 
-    public ScheduleSlot(String start, String end) {
+    public Appointment(String id, Integer memberId, Doctor doctor, String start, String end) {
+        this.id = id;
+        this.memberId = memberId;
+        this.doctor = doctor;
         this.start = start;
         this.end = end;
     }
 
-    @Override
-    public String toString() {
+    public String getStartTime() {
         SimpleDateFormat inputFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
         SimpleDateFormat returnFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
 
@@ -35,10 +41,12 @@ public class ScheduleSlot {
         return returnFormat.format(date);
     }
 
-    public String getStartMilliseconds() {
+    public String getStartDay() {
         SimpleDateFormat inputFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat returnFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
-//        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        returnFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         Date date;
         try {
@@ -46,7 +54,6 @@ public class ScheduleSlot {
         } catch (ParseException e) {
             return start;
         }
-
-        return String.valueOf(date.getTime());
+        return returnFormat.format(date);
     }
 }

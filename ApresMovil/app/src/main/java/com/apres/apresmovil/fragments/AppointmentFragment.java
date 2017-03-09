@@ -1,10 +1,10 @@
 package com.apres.apresmovil.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.Member;
-import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.network.ApiHelper;
