@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
 {
 
     private ApiHelper mApiHelper;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +69,21 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mApiHelper = new ApiHelper(this);
+        fragmentManager = getFragmentManager();
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        fragmentManager.executePendingTransactions();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        }else if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
         }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -85,32 +91,26 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment fragment = null;
         if (id == R.id.nav_health_centers) {
-            Fragment fragment = HealthCenterItemFragment.newInstance();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit();
+            fragment = HealthCenterItemFragment.newInstance();
         } else if (id == R.id.nav_news) {
-            Fragment fragment = NewsItemFragment.newInstance();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit();
+            fragment = NewsItemFragment.newInstance();
         } else if (id == R.id.nav_cartilla) {
-            Fragment fragment = CartillaFragment.newInstance();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit();
+            fragment = CartillaFragment.newInstance();
         } else if (id == R.id.nav_my_appointments) {
-            Fragment fragment = MyAppointmentsFragment.newInstance(1);
-            FragmentManager fragmentManager = getFragmentManager();
+            fragment = MyAppointmentsFragment.newInstance(1);
+        }
+
+        if (fragment != null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
 
+        fragmentManager.executePendingTransactions();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

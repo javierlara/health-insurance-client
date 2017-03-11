@@ -162,7 +162,7 @@ public class CartillaFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cartilla, container, false);
 
-        if(mPlans == null) {
+//        if(mPlans == null) {
             mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
                 @Override
                 public void onSuccess(List list) {
@@ -176,11 +176,11 @@ public class CartillaFragment extends Fragment implements
                     Log.e("PLANS", e.getMessage());
                 }
             });
-        } else {
-            setPlanList(mPlans);
-        }
+//        } else {
+//            setPlanList(mPlans);
+//        }
 
-        if(mSpecialities == null) {
+//        if(mSpecialities == null) {
             mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
                 @Override
                 public void onSuccess(List list) {
@@ -194,9 +194,9 @@ public class CartillaFragment extends Fragment implements
                     Log.e("SPECIALITIES", e.getMessage());
                 }
             });
-        } else {
-            setSpecialityList(view, mSpecialities);
-        }
+//        } else {
+//            setSpecialityList(view, mSpecialities);
+//        }
 
         Button clickButton = (Button) view.findViewById(R.id.cartilla_button_submit);
         clickButton.setOnClickListener(new View.OnClickListener() {

@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onError(Exception e) {
-                    Log.e("MEMBER", e.getMessage());
+                    Log.e("MEMBER", "Member does not exist");
                 }
             });
         }
