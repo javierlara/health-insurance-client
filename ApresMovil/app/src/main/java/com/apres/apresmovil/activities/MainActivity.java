@@ -2,6 +2,7 @@ package com.apres.apresmovil.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.apres.apresmovil.R;
@@ -19,6 +22,7 @@ import com.apres.apresmovil.fragments.AppointmentFragment;
 import com.apres.apresmovil.fragments.CancelAppointmentDialogFragment;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.fragments.HealthCenterItemFragment;
+import com.apres.apresmovil.fragments.HomeFragment;
 import com.apres.apresmovil.fragments.MyAppointmentsFragment;
 import com.apres.apresmovil.fragments.NewsItemFragment;
 import com.apres.apresmovil.models.Appointment;
@@ -37,27 +41,21 @@ public class MainActivity extends AppCompatActivity
 //            CartillaFragment.OnFragmentInteractionListener,
             CartillaFragment.OnListFragmentInteractionListener,
             AppointmentFragment.OnFragmentInteractionListener,
-            MyAppointmentsFragment.OnListFragmentInteractionListener
+            MyAppointmentsFragment.OnListFragmentInteractionListener,
+            HomeFragment.OnFragmentInteractionListener
 {
 
     private ApiHelper mApiHelper;
     private FragmentManager fragmentManager;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,11 +63,18 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         mApiHelper = new ApiHelper(this);
         fragmentManager = getFragmentManager();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, HomeFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
+
+
     }
 
     @Override
@@ -83,7 +88,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -91,7 +95,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = null;
         if (id == R.id.nav_health_centers) {
             fragment = HealthCenterItemFragment.newInstance();
@@ -170,4 +173,47 @@ public class MainActivity extends AppCompatActivity
         Log.i("APPOINTMENT_DELETED", "not deleted");
     }
 
+
+    @Override
+    public void onHomeButtonSelected(Button button) {
+
+        Fragment fragment = null;
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        switch (button.getId()){
+            case R.id.new_home:
+                fragment = NewsItemFragment.newInstance();
+                mNavigationView.getMenu().findItem(R.id.nav_news).setChecked(true);
+                break;
+            case R.id.centers_home:
+                fragment = HealthCenterItemFragment.newInstance();
+                mNavigationView.getMenu().findItem(R.id.nav_health_centers).setChecked(true);
+                break;
+            case R.id.cartilla_home:
+                fragment = CartillaFragment.newInstance();
+                mNavigationView.getMenu().findItem(R.id.nav_cartilla).setChecked(true);
+                break;
+            case R.id.my_appointments_home:
+                fragment = MyAppointmentsFragment.newInstance(1);
+                mNavigationView.getMenu().findItem(R.id.nav_my_appointments).setChecked(true);
+                break;
+            case R.id.sac_home:
+                callIntent.setData(Uri.parse("tel:" + "08001227737"));
+                startActivity(callIntent);
+                break;
+            case R.id.emergency_home:
+                callIntent.setData(Uri.parse("tel:" + "42571111"));
+                startActivity(callIntent);
+                break;
+        }
+
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        fragmentManager.executePendingTransactions();
+
+    }
 }
