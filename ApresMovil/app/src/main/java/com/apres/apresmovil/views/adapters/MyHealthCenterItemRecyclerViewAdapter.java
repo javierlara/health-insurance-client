@@ -1,9 +1,11 @@
 package com.apres.apresmovil.views.adapters;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.apres.apresmovil.R;
@@ -37,7 +39,16 @@ public class MyHealthCenterItemRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).name);
+        String name = mValues.get(position).name;
+        holder.mNameView.setText(name);
+        // TODO: fix this ugly thing
+        if(name.toLowerCase().contains("varela")) {
+            holder.mImageView.setImageResource(R.drawable.varela);
+        } else if(name.toLowerCase().contains("berazategui")) {
+            holder.mImageView.setImageResource(R.drawable.berazategui);
+        } else if(name.toLowerCase().contains("quilmes")) {
+            holder.mImageView.setImageResource(R.drawable.quilmes);
+        }
         holder.mAddressView.setText(mValues.get(position).address);
         holder.mTelephoneView.setText(mValues.get(position).telephone);
 
@@ -61,6 +72,7 @@ public class MyHealthCenterItemRecyclerViewAdapter extends RecyclerView.Adapter<
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mNameView;
+        public final ImageView mImageView;
         public final TextView mAddressView;
         public final TextView mTelephoneView;
         public HealthCenter mItem;
@@ -69,6 +81,7 @@ public class MyHealthCenterItemRecyclerViewAdapter extends RecyclerView.Adapter<
             super(view);
             mView = view;
             mNameView = (TextView) view.findViewById(R.id.name);
+            mImageView = (ImageView) view.findViewById(R.id.thumbnail);
             mAddressView = (TextView) view.findViewById(R.id.address);
             mTelephoneView = (TextView) view.findViewById(R.id.telephone);
         }
