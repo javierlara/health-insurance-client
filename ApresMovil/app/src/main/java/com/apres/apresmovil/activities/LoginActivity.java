@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onError(Exception e) {
                     Log.e("MEMBER", "Member does not exist");
+                    onGetMember(false);
                 }
             });
         }
@@ -216,6 +217,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             startActivity(intent);
         } else {
             mNroSocioView.requestFocus();
+            mNroSocioView.setError("Ingresa un número válido");
         }
     }
 

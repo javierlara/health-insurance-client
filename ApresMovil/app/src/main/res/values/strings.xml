@@ -9,7 +9,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">Campo requerido</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -60,7 +60,8 @@
     <string name="appointment_button_submit_label">Confirmar</string>
     <string name="doctor">Doctor</string>
     <string name="ingresar">Ingresar</string>
-    <string name="welcome">Bienvenido a Apres Movil! Ingresá tu número de socio</string>
+    <string name="welcome">Bienvenido a Apres Movil!</string>
+    <string name="ingresar_socio">Ingresá tu número de socio</string>
     <string name="prompt_member">Nro de socio</string>
     <string name="nav_my_appointments">Mis turnos</string>
     <string name="cancelar">Cancelar</string>
