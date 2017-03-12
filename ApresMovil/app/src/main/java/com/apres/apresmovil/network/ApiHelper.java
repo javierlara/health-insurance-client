@@ -34,10 +34,16 @@ import java.util.Map;
  */
 public class ApiHelper {
 
+    boolean requestingPlans;
+    boolean requestingSpecialities;
+
     public ApiHelper(Context context) {
         mProgress = new ProgressDialog(context, R.style.ProgressTheme);
         mProgress.setCancelable(false);
         mProgress.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+
+        requestingPlans = false;
+        requestingSpecialities = false;
     }
 
     HealthInsuranceApplication helper = HealthInsuranceApplication.getInstance();
@@ -119,6 +125,7 @@ public class ApiHelper {
 
     public void getPlans(final ApiHelperCallback callback) {
         mProgress.show();
+        requestingPlans = true;
         GsonRequest<Plan[]> request =
                 new GsonRequest<Plan[]>(Request.Method.GET, PLANS_ENDPOINT,
                         Plan[].class,
@@ -127,7 +134,10 @@ public class ApiHelper {
                             public void onResponse(Plan[] response) {
                                 List<Plan> plans = Arrays.asList(response);
                                 callback.onSuccess(plans);
-                                mProgress.dismiss();
+                                requestingPlans = false;
+                                if(!requestingSpecialities) {
+                                    mProgress.dismiss();
+                                }
                             }
 
                         },
@@ -135,6 +145,7 @@ public class ApiHelper {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 callback.onError(error);
+                                requestingPlans = false;
                                 mProgress.dismiss();
                             }
                         });
@@ -211,6 +222,7 @@ public class ApiHelper {
 
     public void getSpecialitites(final ApiHelperCallback callback) {
         mProgress.show();
+        requestingSpecialities = true;
         GsonRequest<Speciality[]> request =
                 new GsonRequest<Speciality[]>(Request.Method.GET, SPECIALITIES_ENDPOINT,
                         Speciality[].class,
@@ -219,7 +231,10 @@ public class ApiHelper {
                             public void onResponse(Speciality[] response) {
                                 List<Speciality> specialities = Arrays.asList(response);
                                 callback.onSuccess(specialities);
-                                mProgress.dismiss();
+                                requestingSpecialities = false;
+                                if(!requestingPlans) {
+                                    mProgress.dismiss();
+                                }
                             }
 
                         },
@@ -227,6 +242,7 @@ public class ApiHelper {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 callback.onError(error);
+                                requestingSpecialities = false;
                                 mProgress.dismiss();
                             }
                         });

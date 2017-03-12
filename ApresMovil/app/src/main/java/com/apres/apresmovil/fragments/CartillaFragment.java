@@ -162,41 +162,33 @@ public class CartillaFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cartilla, container, false);
 
-//        if(mPlans == null) {
-            mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
-                @Override
-                public void onSuccess(List list) {
-                    setPlanList(list);
-                    Log.i("PLANS", list.toString());
-                    mPlans = list;
-                }
+        mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
+            @Override
+            public void onSuccess(List list) {
+                setPlanList(list);
+                Log.i("PLANS", list.toString());
+                mPlans = list;
+            }
 
-                @Override
-                public void onError(Exception e) {
-                    Log.e("PLANS", e.getMessage());
-                }
-            });
-//        } else {
-//            setPlanList(mPlans);
-//        }
+            @Override
+            public void onError(Exception e) {
+                Log.e("PLANS", e.getMessage());
+            }
+        });
 
-//        if(mSpecialities == null) {
-            mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
-                @Override
-                public void onSuccess(List list) {
-                    setSpecialityList(view, list);
-                    Log.i("SPECIALITIES", list.toString());
-                    mSpecialities = list;
-                }
+        mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
+            @Override
+            public void onSuccess(List list) {
+                setSpecialityList(view, list);
+                Log.i("SPECIALITIES", list.toString());
+                mSpecialities = list;
+            }
 
-                @Override
-                public void onError(Exception e) {
-                    Log.e("SPECIALITIES", e.getMessage());
-                }
-            });
-//        } else {
-//            setSpecialityList(view, mSpecialities);
-//        }
+            @Override
+            public void onError(Exception e) {
+                Log.e("SPECIALITIES", e.getMessage());
+            }
+        });
 
         Button clickButton = (Button) view.findViewById(R.id.cartilla_button_submit);
         clickButton.setOnClickListener(new View.OnClickListener() {
