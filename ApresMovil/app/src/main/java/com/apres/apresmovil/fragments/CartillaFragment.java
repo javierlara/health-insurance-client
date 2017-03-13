@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.apres.apresmovil.R;
+import com.apres.apresmovil.activities.MainActivity;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
@@ -168,33 +169,46 @@ public class CartillaFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cartilla, container, false);
 
-        mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
-            @Override
-            public void onSuccess(List list) {
-                setPlanList(list);
-                Log.i("PLANS", list.toString());
-                mPlans = list;
-            }
+        mPlans = ((MainActivity) getActivity()).getPlans();
+        mSpecialities = ((MainActivity) getActivity()).getSpecialities();
 
-            @Override
-            public void onError(Exception e) {
-                Log.e("PLANS", e.getMessage());
-            }
-        });
+        if(mPlans.size() <= 0) {
+            mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    setPlanList(view, list);
+                    Log.i("PLANS", list.toString());
+                    mPlans = list;
+                    ((MainActivity) getActivity()).setPlans(mPlans);
+                }
 
-        mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
-            @Override
-            public void onSuccess(List list) {
-                setSpecialityList(view, list);
-                Log.i("SPECIALITIES", list.toString());
-                mSpecialities = list;
-            }
+                @Override
+                public void onError(Exception e) {
+                    Log.e("PLANS", e.getMessage());
+                }
+            });
+        } else {
+            setPlanList(view, mPlans);
+        }
 
-            @Override
-            public void onError(Exception e) {
-                Log.e("SPECIALITIES", e.getMessage());
-            }
-        });
+        if(mSpecialities.size() <= 0) {
+            mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
+                @Override
+                public void onSuccess(List list) {
+                    setSpecialityList(view, list);
+                    Log.i("SPECIALITIES", list.toString());
+                    mSpecialities = list;
+                    ((MainActivity) getActivity()).setSpecialities(mSpecialities);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("SPECIALITIES", e.getMessage());
+                }
+            });
+        } else {
+            setSpecialityList(view, mSpecialities);
+        }
 
         Button clickButton = (Button) view.findViewById(R.id.cartilla_button_submit);
         clickButton.setOnClickListener(new View.OnClickListener() {
@@ -205,8 +219,10 @@ public class CartillaFragment extends Fragment implements
             }
         });
 
-        mDoctorList = new ArrayList<>();
+        mDoctorList = ((MainActivity)getActivity()).getDoctors();
+
         mDoctorAdapter = new DoctorRecyclerViewAdapter(mDoctorList, mListenerList);
+
 
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cartilla_list);;
@@ -224,11 +240,16 @@ public class CartillaFragment extends Fragment implements
             }
         });
 
+        if(mDoctorList.size() > 0) {
+            mDoctorListLayout.setVisibility(View.VISIBLE);
+            mSearchForm.setVisibility(View.GONE);
+        }
+
         return view;
     }
 
-    public void setPlanList(List list) {
-        Spinner spinner = (Spinner) getView().findViewById(R.id.plan_filter);
+    public void setPlanList(View view, List list) {
+        Spinner spinner = (Spinner) view.findViewById(R.id.plan_filter);
         ArrayAdapter<Plan> adapter = new ArrayAdapter<Plan>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         spinner.setAdapter(adapter);
 
@@ -287,6 +308,8 @@ public class CartillaFragment extends Fragment implements
                 mDoctorListLayout.setVisibility(View.VISIBLE);
                 mSearchForm.setVisibility(View.GONE);
 
+                ((MainActivity) getActivity()).setDoctors(mDoctorList);
+
                 Log.i("CARTILLA", list.toString());
             }
 
@@ -337,8 +360,14 @@ public class CartillaFragment extends Fragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void setDoctors(List<Doctor> doctors);
+        List<Doctor> getDoctors();
+
+        void setPlans(List<Plan> plans);
+        List<Plan> getPlans();
+
+        void setSpecialities(List<Speciality> specialities);
+        List<Speciality> getSpecialities();
     }
 
     public interface OnListFragmentInteractionListener {

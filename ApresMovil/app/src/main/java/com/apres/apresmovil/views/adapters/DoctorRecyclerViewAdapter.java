@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.apres.apresmovil.R;
@@ -41,7 +42,7 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
         holder.mAddressView.setText(mValues.get(position).address);
         holder.mTelephoneView.setText(mValues.get(position).telephone);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.mSelectDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
@@ -63,6 +64,7 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
         public final TextView mNameView;
         public final TextView mAddressView;
         public final TextView mTelephoneView;
+        public final Button mSelectDoctorButton;
         public Doctor mItem;
 
         public ViewHolder(View view) {
@@ -71,6 +73,7 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
             mNameView = (TextView) view.findViewById(R.id.doctor_name);
             mAddressView = (TextView) view.findViewById(R.id.doctor_address);
             mTelephoneView = (TextView) view.findViewById(R.id.doctor_telephone);
+            mSelectDoctorButton = (Button) view.findViewById(R.id.select_doctor_button);
         }
 
         @Override

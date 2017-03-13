@@ -29,8 +29,11 @@ import com.apres.apresmovil.models.Appointment;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.HealthCenter;
 import com.apres.apresmovil.models.News;
+import com.apres.apresmovil.models.Plan;
+import com.apres.apresmovil.models.Speciality;
 import com.apres.apresmovil.network.ApiHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity
             NavigationView.OnNavigationItemSelectedListener,
             HealthCenterItemFragment.OnListFragmentInteractionListener,
             NewsItemFragment.OnListFragmentInteractionListener,
-//            CartillaFragment.OnFragmentInteractionListener,
+            CartillaFragment.OnFragmentInteractionListener,
             CartillaFragment.OnListFragmentInteractionListener,
             AppointmentFragment.OnFragmentInteractionListener,
             MyAppointmentsFragment.OnListFragmentInteractionListener,
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity
     private ApiHelper mApiHelper;
     private FragmentManager fragmentManager;
     private NavigationView mNavigationView;
+
+    private List<Doctor> mDoctors;
+    private List<Plan> mPlans;
+    private List<Speciality> mSpecialities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,10 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        mDoctors = new ArrayList<>();
+        mPlans = new ArrayList<>();
+        mSpecialities = new ArrayList<>();
+
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -73,6 +84,7 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, HomeFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
+
 
 
     }
@@ -215,5 +227,35 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.executePendingTransactions();
 
+    }
+
+    @Override
+    public void setDoctors(List<Doctor> doctors) {
+        mDoctors = doctors;
+    }
+
+    @Override
+    public List<Doctor> getDoctors() {
+        return mDoctors;
+    }
+
+    @Override
+    public void setPlans(List<Plan> plans) {
+        mPlans = plans;
+    }
+
+    @Override
+    public List<Plan> getPlans() {
+        return mPlans;
+    }
+
+    @Override
+    public void setSpecialities(List<Speciality> specialities) {
+        mSpecialities = specialities;
+    }
+
+    @Override
+    public List<Speciality> getSpecialities() {
+        return mSpecialities;
     }
 }
