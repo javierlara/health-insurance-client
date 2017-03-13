@@ -31,7 +31,6 @@ public class CancelAppointmentDialogFragment extends DialogFragment {
         final String appointmentId = getArguments().getString(BUNDLE_KEY);
 
         return new AlertDialog.Builder(getActivity())
-//                .setIcon(R.drawable.alert_dialog_icon)
                 .setTitle(R.string.cancel_dialog_title)
                 .setPositiveButton(R.string.alert_dialog_ok,
                         new DialogInterface.OnClickListener() {

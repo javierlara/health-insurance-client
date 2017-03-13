@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.models.Doctor;
@@ -176,13 +177,6 @@ public class AppointmentFragment extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -226,24 +220,24 @@ public class AppointmentFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onNewAppointment();
     }
 
     public void onAppointmentButton() {
         if(mSlot != null) {
             Log.i("APPOINTMENT", mSlot.toString());
             Member member = session.getCurrentMember();
-            mApiHelper.postAppointment(mDoctor.id, member.id, mSlot.getStartMilliseconds(), new ApiHelper.ApiHelperCallback() {
+            mApiHelper.postAppointment(mDoctor.id, member.id, mSlot.getStartMilliseconds(), new ApiHelper.ApiHelperJsonCallback() {
                 @Override
-                public void onSuccess(List list) {
-                    if (list.size() == 1) {
-                        Log.i("APPOINTMENT", list.toString());
-                    }
+                public void onSuccess() {
+                    Toast.makeText(getActivity(), "Turno sacado con éxito!", Toast.LENGTH_SHORT).show();
+                    mListener.onNewAppointment();
                 }
 
                 @Override
                 public void onError(Exception e) {
                     Log.e("APPOINTMENT", e.getMessage());
+                    Toast.makeText(getActivity(), "Hubo un error. Intente más tarde", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -24,7 +24,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.apres.apresmovil.R;
-import com.apres.apresmovil.activities.MainActivity;
 import com.apres.apresmovil.models.Doctor;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
@@ -169,8 +168,8 @@ public class CartillaFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cartilla, container, false);
 
-        mPlans = ((MainActivity) getActivity()).getPlans();
-        mSpecialities = ((MainActivity) getActivity()).getSpecialities();
+        mPlans = mListener.getPlans();
+        mSpecialities = mListener.getSpecialities();
 
         if(mPlans.size() <= 0) {
             mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
@@ -179,7 +178,7 @@ public class CartillaFragment extends Fragment implements
                     setPlanList(view, list);
                     Log.i("PLANS", list.toString());
                     mPlans = list;
-                    ((MainActivity) getActivity()).setPlans(mPlans);
+                    mListener.setPlans(mPlans);
                 }
 
                 @Override
@@ -198,7 +197,7 @@ public class CartillaFragment extends Fragment implements
                     setSpecialityList(view, list);
                     Log.i("SPECIALITIES", list.toString());
                     mSpecialities = list;
-                    ((MainActivity) getActivity()).setSpecialities(mSpecialities);
+                    mListener.setSpecialities(mSpecialities);
                 }
 
                 @Override
@@ -219,7 +218,7 @@ public class CartillaFragment extends Fragment implements
             }
         });
 
-        mDoctorList = ((MainActivity)getActivity()).getDoctors();
+        mDoctorList = mListener.getDoctors();
 
         mDoctorAdapter = new DoctorRecyclerViewAdapter(mDoctorList, mListenerList);
 
@@ -308,7 +307,7 @@ public class CartillaFragment extends Fragment implements
                 mDoctorListLayout.setVisibility(View.VISIBLE);
                 mSearchForm.setVisibility(View.GONE);
 
-                ((MainActivity) getActivity()).setDoctors(mDoctorList);
+                mListener.setDoctors(mDoctorList);
 
                 Log.i("CARTILLA", list.toString());
             }
@@ -334,8 +333,9 @@ public class CartillaFragment extends Fragment implements
     }
 
     public void commonOnAttach(Context context) {
-        if (context instanceof OnListFragmentInteractionListener) {
+        if (context instanceof OnListFragmentInteractionListener && context instanceof OnFragmentInteractionListener) {
             mListenerList = (OnListFragmentInteractionListener) context;
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -347,6 +347,7 @@ public class CartillaFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mListenerList = null;
     }
 
     /**

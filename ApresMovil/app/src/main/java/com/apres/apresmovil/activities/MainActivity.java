@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity
             fragment = CartillaFragment.newInstance();
         } else if (id == R.id.nav_my_appointments) {
             fragment = MyAppointmentsFragment.newInstance(1);
+        } else if (id == R.id.nav_home) {
+            fragment = HomeFragment.newInstance();
         }
 
         if (fragment != null) {
@@ -143,8 +145,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onNewAppointment() {
+        Fragment fragment = MyAppointmentsFragment.newInstance(1);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
+        mNavigationView.getMenu().findItem(R.id.nav_my_appointments).setChecked(true);
     }
 
     public void onListFragmentInteraction(Doctor doctor) {
@@ -164,17 +172,20 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void doPositiveClick(String appointmentId) {
+    public void doPositiveClick(final String appointmentId) {
         if(appointmentId != null) {
-            mApiHelper.deleteAppointment(appointmentId, new ApiHelper.ApiHelperCallback() {
+            mApiHelper.deleteAppointment(appointmentId, new ApiHelper.ApiHelperJsonCallback() {
                 @Override
-                public void onSuccess(List list) {
-                    Log.i("APPOINTMENT_DELETED", list.toString());
+                public void onSuccess() {
+                    Log.i("APPOINTMENT_DELETED", appointmentId);
+                    Toast.makeText(getApplicationContext(), "Turno cancelado con éxito!", Toast.LENGTH_SHORT).show();
+                    onNewAppointment();
                 }
 
                 @Override
-                public void onError(Exception error) {
-                    Log.e("APPOINTMENT_DELETED", error.getMessage());
+                public void onError(Exception e) {
+                    Log.e("APPOINTMENT_DELETED", e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Hubo un error. Intente más tarde", Toast.LENGTH_SHORT).show();
                 }
             });
         }

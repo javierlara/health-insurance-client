@@ -68,5 +68,6 @@
     <string name="cancel_dialog_title">Deseas cancelar el turno?</string>
     <string name="alert_dialog_ok">Si</string>
     <string name="alert_dialog_cancel">No</string>
+    <string name="nav_home">Home</string>
 
 </resources>

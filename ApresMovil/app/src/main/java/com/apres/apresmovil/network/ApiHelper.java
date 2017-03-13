@@ -54,6 +54,12 @@ public class ApiHelper {
         void onError(Exception error);
     }
 
+    public interface ApiHelperJsonCallback {
+        void onSuccess();
+
+        void onError(Exception error);
+    }
+
 
     /***
      * TODO: MOVE THIS TO ANOTHER CLASS
@@ -340,7 +346,7 @@ public class ApiHelper {
         helper.add(request);
     }
 
-    public void postAppointment(String doctorId, String memberId, String start, ApiHelperCallback apiHelperCallback) {
+    public void postAppointment(String doctorId, String memberId, String start, final ApiHelperJsonCallback apiHelperCallback) {
         mProgress.show();
 
         String endpoint = APPOINTMENT_ENDPOINT;
@@ -360,14 +366,16 @@ public class ApiHelper {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("APPOINTMENTPOST", response.toString());
-                mProgress.hide();
+                apiHelperCallback.onSuccess();
+                mProgress.dismiss();
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("APPOINTMENTPOST", error.toString());
-                mProgress.hide();
+                apiHelperCallback.onError(error);
+                mProgress.dismiss();
             }
         }) {
             /**
@@ -384,7 +392,7 @@ public class ApiHelper {
         helper.add(request);
     }
 
-    public void deleteAppointment(String appointmentId, ApiHelperCallback apiHelperCallback) {
+    public void deleteAppointment(String appointmentId, final ApiHelperJsonCallback apiHelperCallback) {
         mProgress.show();
 
         String endpoint = APPOINTMENT_ENDPOINT + '/' + appointmentId;
@@ -396,6 +404,7 @@ public class ApiHelper {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("APPOINTMENTDELETE", response.toString());
+                apiHelperCallback.onSuccess();
                 mProgress.hide();
             }
         }, new Response.ErrorListener() {
@@ -403,6 +412,7 @@ public class ApiHelper {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("APPOINTMENTDELETE", error.toString());
+                apiHelperCallback.onError(error);
                 mProgress.hide();
             }
         }) {
