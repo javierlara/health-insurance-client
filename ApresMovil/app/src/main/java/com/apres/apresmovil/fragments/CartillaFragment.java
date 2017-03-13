@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -69,6 +71,10 @@ public class CartillaFragment extends Fragment implements
 
     private List<Plan> mPlans;
     private List<Speciality> mSpecialities;
+
+    private LinearLayout mSearchForm;
+    private LinearLayout mDoctorListLayout;
+    private ImageButton mBackButton;
 
     public CartillaFragment() {
     }
@@ -207,6 +213,17 @@ public class CartillaFragment extends Fragment implements
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mDoctorAdapter);
 
+        mSearchForm = (LinearLayout) view.findViewById(R.id.search_form);
+        mDoctorListLayout = (LinearLayout) view.findViewById(R.id.doctor_list);
+        mBackButton = (ImageButton) view.findViewById(R.id.back_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchForm.setVisibility(View.VISIBLE);
+                mDoctorListLayout.setVisibility(View.GONE);
+            }
+        });
+
         return view;
     }
 
@@ -266,6 +283,10 @@ public class CartillaFragment extends Fragment implements
                 mDoctorList.clear();
                 mDoctorList.addAll(list);
                 mDoctorAdapter.notifyDataSetChanged();
+
+                mDoctorListLayout.setVisibility(View.VISIBLE);
+                mSearchForm.setVisibility(View.GONE);
+
                 Log.i("CARTILLA", list.toString());
             }
 
