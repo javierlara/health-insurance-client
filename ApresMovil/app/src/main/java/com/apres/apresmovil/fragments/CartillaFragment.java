@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -34,6 +35,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +87,12 @@ public class CartillaFragment extends Fragment implements
     private LinearLayout mSearchForm;
     private LinearLayout mDoctorListLayout;
     private ImageButton mBackButton;
+    private ImageButton mMapButton;
+    private Switch mLocationFilterSwitch;
+
+    MapView mMapView;
+    private GoogleMap googleMap;
+    private List<MarkerOptions> mMarkers;
 
     public CartillaFragment() {
     }
@@ -95,6 +113,7 @@ public class CartillaFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLocation();
+        mMarkers = new ArrayList<>();
     }
 
     private void getLocation() {
@@ -145,14 +164,19 @@ public class CartillaFragment extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
-        mLocation = location;
+        if(mLocation == null) {
+            mLocation = location;
+        } else {
+            mLocation = location;
+            setupCamera();
+        }
         Log.d(LOCATION_TAG, "change to " + mLocation.toString());
     }
 
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-         Log.e(LOCATION_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.e(LOCATION_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
 
@@ -171,7 +195,7 @@ public class CartillaFragment extends Fragment implements
         mPlans = mListener.getPlans();
         mSpecialities = mListener.getSpecialities();
 
-        if(mPlans.size() <= 0) {
+        if (mPlans.size() <= 0) {
             mApiHelper.getPlans(new ApiHelper.ApiHelperCallback() {
                 @Override
                 public void onSuccess(List list) {
@@ -190,7 +214,7 @@ public class CartillaFragment extends Fragment implements
             setPlanList(view, mPlans);
         }
 
-        if(mSpecialities.size() <= 0) {
+        if (mSpecialities.size() <= 0) {
             mApiHelper.getSpecialitites(new ApiHelper.ApiHelperCallback() {
                 @Override
                 public void onSuccess(List list) {
@@ -224,7 +248,8 @@ public class CartillaFragment extends Fragment implements
 
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cartilla_list);;
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cartilla_list);
+        ;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mDoctorAdapter);
 
@@ -236,15 +261,98 @@ public class CartillaFragment extends Fragment implements
             public void onClick(View v) {
                 mSearchForm.setVisibility(View.VISIBLE);
                 mDoctorListLayout.setVisibility(View.GONE);
+                googleMap.clear();
+                mMarkers.clear();
             }
         });
 
-        if(mDoctorList.size() > 0) {
+        mMapButton = (ImageButton) view.findViewById(R.id.map_button);
+        mMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mMapView.getVisibility() == View.GONE) {
+                    mMapView.setVisibility(View.VISIBLE);
+                    googleMap.clear();
+                    mMarkers.clear();
+                    for(Doctor doctor : mDoctorList) {
+                        MarkerOptions doctorMarker = new MarkerOptions().position(doctor.getLocation()).title(doctor.name).snippet(doctor.address);
+                        googleMap.addMarker(doctorMarker);
+                        mMarkers.add(doctorMarker);
+                    }
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            setupCamera();
+                        }
+                    });
+
+                } else {
+                    mMapView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        if (mDoctorList.size() > 0) {
             mDoctorListLayout.setVisibility(View.VISIBLE);
             mSearchForm.setVisibility(View.GONE);
         }
 
+        setMapView(view, savedInstanceState);
+
+        mLocationFilterSwitch = (Switch) view.findViewById(R.id.location_filter);
+        mLocationFilterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    googleMap.clear();
+                    mMapView.setVisibility(View.VISIBLE);
+                } else {
+                    mMapView.setVisibility(View.GONE);
+                }
+            }
+        });
+
         return view;
+    }
+
+    private void setupCamera() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (MarkerOptions marker : mMarkers) {
+            builder.include(marker.getPosition());
+        }
+        builder.include(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
+        LatLngBounds bounds = builder.build();
+        int padding = 15; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        googleMap.animateCamera(cu);
+    }
+
+    private void setMapView(View rootView, Bundle savedInstanceState) {
+        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        updateMapLocation();
+    }
+
+    private void updateMapLocation() {
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
     }
 
     public void setPlanList(View view, List list) {
@@ -288,8 +396,7 @@ public class CartillaFragment extends Fragment implements
     }
 
     public void onCartillaButton() {
-        Switch locationSwitch = (Switch) getView().findViewById(R.id.location_filter);
-        boolean location_filter_enabled = locationSwitch.isChecked();
+        boolean location_filter_enabled = mLocationFilterSwitch.isChecked();
         String latitude = "";
         String longitude = "";
         if(location_filter_enabled && mLocation != null) {
@@ -306,6 +413,7 @@ public class CartillaFragment extends Fragment implements
 
                 mDoctorListLayout.setVisibility(View.VISIBLE);
                 mSearchForm.setVisibility(View.GONE);
+                mMapView.setVisibility(View.GONE);
 
                 mListener.setDoctors(mDoctorList);
 
@@ -348,6 +456,30 @@ public class CartillaFragment extends Fragment implements
         super.onDetach();
         mListener = null;
         mListenerList = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     /**

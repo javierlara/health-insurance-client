@@ -28,7 +28,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/my_button"
                 android:textColor="@color/textIconsColor"
-                android:onClick="onHom"
                 android:text="Novedades" />
 
             <Button
