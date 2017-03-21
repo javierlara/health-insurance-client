@@ -1,6 +1,7 @@
 package com.apres.apresmovil.views.adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.fragments.CartillaFragment;
 import com.apres.apresmovil.models.Doctor;
+import com.apres.apresmovil.utils.Utils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
     private final List<Doctor> mValues;
     private final CartillaFragment.OnListFragmentInteractionListener mListener;
     protected Context mContext;
+    private Location currentLocation;
 
     public DoctorRecyclerViewAdapter(List<Doctor> items, CartillaFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -39,7 +43,13 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mNameView.setText(mValues.get(position).name);
-        holder.mAddressView.setText(mValues.get(position).address);
+        LatLng doctorLocation = holder.mItem.getLocation();
+        if(currentLocation != null) {
+            String distance = String.format("%.2f", Utils.distance((float) currentLocation.getLatitude(), (float) currentLocation.getLongitude(), (float) doctorLocation.latitude, (float) doctorLocation.longitude));
+            holder.mAddressView.setText(mValues.get(position).address + " (" + distance + " km)");
+        } else {
+            holder.mAddressView.setText(mValues.get(position).address);
+        }
         holder.mTelephoneView.setText(mValues.get(position).telephone);
 
         holder.mSelectDoctorButton.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +67,10 @@ public class DoctorRecyclerViewAdapter extends RecyclerView.Adapter<DoctorRecycl
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

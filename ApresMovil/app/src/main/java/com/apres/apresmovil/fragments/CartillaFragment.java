@@ -94,6 +94,8 @@ public class CartillaFragment extends Fragment implements
     private GoogleMap googleMap;
     private List<MarkerOptions> mMarkers;
 
+    private boolean mapLoaded;
+
     public CartillaFragment() {
     }
 
@@ -114,6 +116,7 @@ public class CartillaFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         getLocation();
         mMarkers = new ArrayList<>();
+        mapLoaded = false;
     }
 
     private void getLocation() {
@@ -166,7 +169,7 @@ public class CartillaFragment extends Fragment implements
     public void onLocationChanged(Location location) {
         if(mLocation == null) {
             mLocation = location;
-        } else {
+        } else if(mapLoaded){
             mLocation = location;
             setupCamera();
         }
@@ -282,6 +285,7 @@ public class CartillaFragment extends Fragment implements
                     googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
+                            mapLoaded = true;
                             setupCamera();
                         }
                     });
@@ -402,6 +406,7 @@ public class CartillaFragment extends Fragment implements
         if(location_filter_enabled && mLocation != null) {
             latitude = String.valueOf(mLocation.getLatitude());
             longitude = String.valueOf(mLocation.getLongitude());
+            mDoctorAdapter.setCurrentLocation(mLocation);
         }
 
         mApiHelper.getCartilla(mPlanId, mSpecialityId, latitude, longitude, new ApiHelper.ApiHelperCallback() {
