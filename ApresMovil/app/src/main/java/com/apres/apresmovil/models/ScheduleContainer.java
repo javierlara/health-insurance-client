@@ -1,9 +1,5 @@
 package com.apres.apresmovil.models;
 
-import android.content.Context;
-import android.transition.Scene;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

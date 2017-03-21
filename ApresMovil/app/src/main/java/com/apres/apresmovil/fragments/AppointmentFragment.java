@@ -3,7 +3,6 @@ package com.apres.apresmovil.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +24,6 @@ import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.network.ApiHelper;
 import com.apres.apresmovil.utils.Session;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
