@@ -17,6 +17,9 @@
         <item
             android:id="@+id/nav_my_appointments"
             android:title="@string/nav_my_appointments" />
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/nav_logout" />
     </group>
 
 </menu>

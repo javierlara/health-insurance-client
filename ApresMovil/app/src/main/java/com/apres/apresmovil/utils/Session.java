@@ -32,4 +32,8 @@ public class Session {
         String json = mPrefs.getString("CurrentMember", "");
         return gson.fromJson(json, Member.class);
     }
+
+    public void clear() {
+        mPrefs.edit().clear().apply();
+    }
 }

@@ -69,5 +69,6 @@
     <string name="alert_dialog_ok">Si</string>
     <string name="alert_dialog_cancel">No</string>
     <string name="nav_home">Home</string>
+    <string name="nav_logout">Salir</string>
 
 </resources>

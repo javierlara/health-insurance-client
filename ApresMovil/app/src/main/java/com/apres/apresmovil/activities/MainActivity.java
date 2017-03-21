@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ import com.apres.apresmovil.models.News;
 import com.apres.apresmovil.models.Plan;
 import com.apres.apresmovil.models.Speciality;
 import com.apres.apresmovil.network.ApiHelper;
+import com.apres.apresmovil.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     private List<Doctor> mDoctors;
     private List<Plan> mPlans;
     private List<Speciality> mSpecialities;
+
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(null)
                 .commit();
 
+        session = new Session(this);
 
 
     }
@@ -118,6 +121,12 @@ public class MainActivity extends AppCompatActivity
             fragment = MyAppointmentsFragment.newInstance(1);
         } else if (id == R.id.nav_home) {
             fragment = HomeFragment.newInstance();
+        } else if (id == R.id.nav_logout) {
+            session.clear();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            this.finish();
+            return true;
         }
 
         if (fragment != null) {
