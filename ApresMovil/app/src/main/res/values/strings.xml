@@ -70,5 +70,10 @@
     <string name="alert_dialog_cancel">No</string>
     <string name="nav_home">Home</string>
     <string name="nav_logout">Salir</string>
+    <string name="registraci_n">Registrarme</string>
+    <string name="title_activity_register">Registro</string>
+    <string name="prompt_name">Nombre Completo</string>
+    <string name="prompt_address">Dirección</string>
+    <string name="prompt_telephone">Teléfono</string>
 
 </resources>

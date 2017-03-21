@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.apres.apresmovil.R;
 import com.apres.apresmovil.models.Member;
@@ -70,6 +71,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
+        TextView registeLink = (TextView) findViewById(R.id.register_link);
+        registeLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                register();
+            }
+        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -77,6 +85,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mApiHelper = new ApiHelper(this);
 
         session = new Session(this);
+    }
+
+    private void register() {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     /**

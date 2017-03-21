@@ -70,7 +70,9 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="32dp">
+                    android:padding="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true">
 
                     <LinearLayout
                         android:focusable="true"
@@ -137,6 +139,17 @@
                             android:background="@color/colorPrimary"
                             android:textStyle="bold" />
                     </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/register_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/registraci_n"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorAccent" />
+
 
                 </LinearLayout>
             </RelativeLayout>

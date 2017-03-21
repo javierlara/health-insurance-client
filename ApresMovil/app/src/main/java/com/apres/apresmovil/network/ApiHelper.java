@@ -429,4 +429,53 @@ public class ApiHelper {
 
         helper.add(request);
     }
+
+    public void createMember(String nroSocio, String nombre, String direccion, String telefono, String mPlanId, final ApiHelperJsonCallback apiHelperCallback) {
+        mProgress.show();
+
+        String endpoint = MEMBER_ENDPOINT;
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("name", nombre);
+            jsonBody.put("address", direccion);
+            jsonBody.put("telephone", telefono);
+            jsonBody.put("plan_id", mPlanId);
+            jsonBody.put("member_number", nroSocio);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request
+                = new JsonObjectRequest(Request.Method.POST, endpoint, jsonBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i("MEMBERPOST", response.toString());
+                apiHelperCallback.onSuccess();
+                mProgress.dismiss();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MEMBERPOST", error.toString());
+                apiHelperCallback.onError(error);
+                mProgress.dismiss();
+            }
+        }) {
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        helper.add(request);
+    }
+
 }
