@@ -3,48 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/widget_margin"
-    android:background="#55000000">
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:layout_width="61dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/consulta"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:textStyle="bold"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
 
         <Button
-            android:id="@+id/actionButton"
+            android:id="@+id/sac_widget"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:layout_weight="1"
-            android:text="@string/call"/>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/emergencias"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:textStyle="bold"/>
+            android:background="@drawable/my_button"
+            android:textColor="@color/textIconsColor"
+            android:text="Atención al cliente" />
 
         <Button
-            android:id="@+id/actionButton2"
+            android:id="@+id/emergency_widget"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:layout_weight="1"
-            android:text="@string/call"/>
+            android:background="@drawable/my_button"
+            android:textColor="@color/textIconsColor"
+            android:text="Emergencias" />
     </LinearLayout>
 
 </LinearLayout>

@@ -28,8 +28,8 @@ public class Emergencias extends AppWidgetProvider {
 
         // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.emergencias);
-        views.setOnClickPendingIntent(R.id.actionButton, pendingIntent);
-        views.setOnClickPendingIntent(R.id.actionButton2, pendingIntent2);
+        views.setOnClickPendingIntent(R.id.sac_widget, pendingIntent);
+        views.setOnClickPendingIntent(R.id.emergency_widget, pendingIntent2);
 
         // Tell the AppWidgetManager to perform an update on the current App Widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
