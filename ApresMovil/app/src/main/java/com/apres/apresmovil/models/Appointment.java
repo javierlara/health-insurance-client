@@ -56,4 +56,27 @@ public class Appointment {
         }
         return returnFormat.format(date);
     }
+
+    public boolean canCancel() {
+        Date date = getStartDate();
+        Date now = new Date();
+        return now.before(date);
+    }
+
+    public Date getStartDate() {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
+        Date date;
+        try {
+            date = inputFormat.parse(start);
+        } catch (ParseException e) {
+            return null;
+        }
+        return date;
+    }
+
+    public int compare(Appointment o2) {
+        Date date1 = getStartDate();
+        Date date2 = o2.getStartDate();
+        return date1.after(date2) ? -1 : date1 == date2 ? 0 : 1;
+    }
 }

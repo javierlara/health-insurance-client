@@ -23,6 +23,8 @@ import com.apres.apresmovil.views.adapters.MyAppointmentHistoryRecyclerViewAdapt
 import com.apres.apresmovil.views.itemdecorations.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -86,7 +88,16 @@ public class MyAppointmentsFragment extends Fragment {
             public void onSuccess(List list) {
                 AppointmentContainer appointmentContainer = (AppointmentContainer) list.get(0);
                 mAppointmentList.clear();
-                mAppointmentList.addAll(appointmentContainer.appointments);
+                ArrayList<Appointment> sortedAppointments = appointmentContainer.appointments;
+
+                Collections.sort(sortedAppointments, new Comparator<Appointment>() {
+
+                    @Override
+                    public int compare(Appointment o1, Appointment o2) {
+                        return o1.compare(o2);
+                    }
+                });
+                mAppointmentList.addAll(sortedAppointments);
                 mAppointmentAdapter.notifyDataSetChanged();
                 Log.i("Appointments", mAppointmentList.toString());
             }

@@ -38,22 +38,30 @@ public class MyAppointmentHistoryRecyclerViewAdapter extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mStartDayView.setText(mValues.get(position).getStartDay());
-        holder.mStartTimeView.setText(mValues.get(position).getStartTime());
-        holder.mDoctorNameView.setText(mValues.get(position).doctor.name);
-        holder.mDoctorAddressView.setText(mValues.get(position).doctor.address);
 
-        holder.mDeleteAppointment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onAppointmentCancel(holder.mItem);
+        Appointment item = mValues.get(position);
+
+        holder.mItem = item;
+        holder.mStartDayView.setText(item.getStartDay());
+        holder.mStartTimeView.setText(item.getStartTime());
+        holder.mDoctorNameView.setText(item.doctor.name);
+        holder.mDoctorAddressView.setText(item.doctor.address);
+
+        if(item.canCancel()) {
+
+            holder.mDeleteAppointment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onAppointmentCancel(holder.mItem);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            holder.mDeleteAppointment.setVisibility(View.GONE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
