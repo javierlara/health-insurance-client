@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import com.apres.apresmovil.models.ScheduleContainer;
 import com.apres.apresmovil.models.ScheduleSlot;
 import com.apres.apresmovil.network.ApiHelper;
 import com.apres.apresmovil.utils.Session;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +59,9 @@ public class AppointmentFragment extends Fragment {
     private ScheduleContainer mScheduleContainer;
 
     private Spinner mAppointmentSpinner;
+    private LinearLayout mAppointmentLayout;
+    private LinearLayout mNoAppointmentsMessageLayout;
+    private TextView mDaysHelpTextView;
 
     private ScheduleSlot mSlot;
 
@@ -107,6 +113,9 @@ public class AppointmentFragment extends Fragment {
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
+            mAppointmentLayout = (LinearLayout) view.findViewById(R.id.confirm_appointment_layout);
+            mNoAppointmentsMessageLayout = (LinearLayout) view.findViewById(R.id.no_appointment_message_layout);
+            mDaysHelpTextView = (TextView) view.findViewById(R.id.days_help);
         }
 
         initializeCalendar(view);
@@ -171,9 +180,16 @@ public class AppointmentFragment extends Fragment {
             ArrayList<ScheduleSlot> slots = mScheduleContainer.getSlots(currentDay);
             if(slots.size() <= 0) {
                 mSlot = null;
+                mAppointmentLayout.setVisibility(View.GONE);
+                mNoAppointmentsMessageLayout.setVisibility(View.VISIBLE);
+                String message = "Días con turnos disponibles este mes: " + mScheduleContainer.getAvailableSlotDays();
+                mDaysHelpTextView.setText(message);
+            } else {
+                mAppointmentLayout.setVisibility(View.VISIBLE);
+                mNoAppointmentsMessageLayout.setVisibility(View.GONE);
+                ArrayAdapter<ScheduleSlot> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, slots);
+                mAppointmentSpinner.setAdapter(adapter);
             }
-            ArrayAdapter<ScheduleSlot> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, slots);
-            mAppointmentSpinner.setAdapter(adapter);
         }
     }
 

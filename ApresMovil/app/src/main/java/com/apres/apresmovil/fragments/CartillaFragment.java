@@ -138,6 +138,7 @@ public class CartillaFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+        mapLoaded = false;
         mGoogleApiClient.connect();
     }
 

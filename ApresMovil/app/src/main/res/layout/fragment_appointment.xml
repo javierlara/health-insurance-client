@@ -31,8 +31,10 @@
             android:showWeekNumber="false" />
 
         <LinearLayout
+            android:id="@+id/confirm_appointment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -54,6 +56,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </LinearLayout>
 
             <RelativeLayout
@@ -70,7 +73,27 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
-
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/no_appointment_message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/no_appointment_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textAlignment="center"
+                android:text="@string/no_appointments"/>
+            <TextView
+                android:id="@+id/days_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textAlignment="center"
+                />
         </LinearLayout>
     </LinearLayout>
     <!--</ScrollView>-->

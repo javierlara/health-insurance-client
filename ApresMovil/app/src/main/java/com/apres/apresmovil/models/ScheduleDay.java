@@ -13,4 +13,10 @@ public class ScheduleDay {
         this.day = day;
         this.slots = slots;
     }
+
+    public int compare(ScheduleDay o2) {
+        int day1 = Integer.parseInt(this.day);
+        int day2 = Integer.parseInt(o2.day);
+        return day1 < day2 ? -1 : day1 == day2 ? 0 : 1;
+    }
 }
