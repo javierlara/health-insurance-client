@@ -1,10 +1,13 @@
 package com.apres.apresmovil.models;
 
+import android.content.Context;
 import android.transition.Scene;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * Created by javierlara on 2/15/17.
@@ -30,7 +33,7 @@ public class ScheduleContainer {
 
     public ArrayList<ScheduleSlot> getSlots(int day) {
         for(ScheduleDay scheduleDay : payload) {
-            if(scheduleDay.day == String.valueOf(day)) {
+            if(Objects.equals(scheduleDay.day, String.valueOf(day))) {
                 return scheduleDay.slots;
             }
         }
